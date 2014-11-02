@@ -1,0 +1,13 @@
+node_modules/
+node_modules/**
+dist/
+.tmp
+.sass-cache
+.directory
+.idea
+*.iml
+screenshot*
+.DS_Store
+public
+test/tmp/
+test/tmp/**
