@@ -1,14 +1,16 @@
-# Environment setup
+# Thumbler
 
-## 1. Install MongoDB
+## Environment setup
 
-## 2. Install NodeJS from http://nodejs.org/. Npm should come with it.
+### 1. Install MongoDB
 
-## 3. Install gulp & coffeescript globally
+### 2. Install NodeJS from http://nodejs.org/. Npm should come with it.
+
+### 3. Install gulp & coffeescript globally
 
   $ npm install -g coffee-script gulp
 
-## 4. Verify installation
+### 4. Verify installation
 
   $ node --version
   v0.10.25
@@ -16,11 +18,11 @@
   $ npm --version
   1.3.24
 
-## 5. Cd into project directory and issue
+### 5. Cd into project directory and issue
 
   $ npm install
 
-## 6. Run the dev environment + server
+### 6. Run the dev environment + server
 
   $ gulp
 
@@ -32,7 +34,7 @@ By default rewrites the database on each run and file change. To turn off automa
 
   $ gulp --no-rebuild
 
-## 7. Test Driven Development
+### 7. Test Driven Development
 
 To simply run the tests
 
@@ -42,9 +44,9 @@ To watch for file changes and run the tests every time something changes
 
   $ gulp tdd
 
-## 8. Enjoy
+### 8. Enjoy
 
-## Some util commands
+### Some util commands
 
 Displays a fortune. Often comes in handy.
 
