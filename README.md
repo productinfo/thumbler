@@ -14,11 +14,13 @@
 
   ```
   $ node --version
-  v0.10.25```
+  v0.10.25
+  ```
 
   ```
   $ npm --version
-  1.3.24```
+  1.3.24
+  ```
 
 ### 5. Cd into project directory and issue
 
@@ -33,7 +35,8 @@
   ```
   {
     "url": "mongodb://localhost/thumbler"
-  }```
+  }
+  ```
 
 ### 7. Run the dev environment + server
 
