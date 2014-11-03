@@ -12,10 +12,12 @@
 
 ### 4. Verify installation
 
-  ```$ node --version
+  ```
+  $ node --version
   v0.10.25```
 
-  ```$ npm --version
+  ```
+  $ npm --version
   1.3.24```
 
 ### 5. Cd into project directory and issue
@@ -28,7 +30,8 @@
 
   Sample config:
 
-  ```{
+  ```
+  {
     "url": "mongodb://localhost/thumbler"
   }```
 
