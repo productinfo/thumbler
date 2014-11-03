@@ -37,7 +37,7 @@ module.exports = (debug = false) ->
 
   router.get '/vote', (req, res, next) ->
     createThumb(req.query)
-    .then -> res.status(200).end()
+    .then (thumb) -> res.render 'vote', {thumb}
     .catch (err) ->
       if err.code in [11000, 11001]
         res.status(400).send("Duplicate thumb")

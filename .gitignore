@@ -8,7 +8,6 @@ dist/
 *.iml
 screenshot*
 .DS_Store
-public
 test/tmp/
 test/tmp/**
 db_config.json
