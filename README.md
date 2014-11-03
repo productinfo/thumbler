@@ -22,7 +22,17 @@
 
   $ npm install
 
-### 6. Run the dev environment + server
+### 6. Configure database connection
+
+  Add db_config.json to the project folder.
+
+  Sample config:
+
+  ```{
+    "url": "mongodb://localhost/thumbler"
+  }```
+
+### 7. Run the dev environment + server
 
   $ gulp
 
@@ -34,7 +44,7 @@ By default rewrites the database on each run and file change. To turn off automa
 
   $ gulp --no-rebuild
 
-### 7. Test Driven Development
+### 8. Test Driven Development
 
 To simply run the tests
 
@@ -44,7 +54,7 @@ To watch for file changes and run the tests every time something changes
 
   $ gulp tdd
 
-### 8. Enjoy
+### 9. Enjoy
 
 ### Some util commands
 

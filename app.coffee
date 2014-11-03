@@ -72,7 +72,7 @@ module.exports =
     .then ->
       logging.log('Init #1: Resetting DB')
       # model.sequelize.sync(force: true)
-      mongoose.connect('mongodb://localhost/thumbler')
+      mongoose.connect(require('./db_config.json').url)
     .then ->
       logging.log('Init #2: Loading fixtures')
       # Load dev-hacking fixtures
