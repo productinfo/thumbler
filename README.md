@@ -56,7 +56,7 @@ To watch for file changes and run the tests every time something changes
 
 ### 9. Enjoy
 
-### Some util commands
+## Some util commands
 
 Displays a fortune. Often comes in handy.
 
