@@ -50,6 +50,7 @@ app.use (req, res, next) ->
 # will print stacktrace
 if app.get("env") is "development"
   app.use (err, req, res, next) ->
+    logging.error(err.stack)
     res.status err.status or 500
     res.render "error",
       message: err.message

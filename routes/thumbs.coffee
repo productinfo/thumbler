@@ -29,14 +29,20 @@ module.exports = (debug = false) ->
     .catch (err) ->
       if err.code in [11000, 11001]
         res.status(400).send("Duplicate thumb")
+      else if err.name is "ValidationError"
+        message = _.map(err.errors, (i) -> i.message).join(' ')
+        res.status(400).send("Validation errors: #{message}")
       else
         next(err)
 
   router.get '/vote', (req, res, next) ->
-    createThumb(req.params)
+    createThumb(req.query)
     .then -> res.status(200).end()
     .catch (err) ->
       if err.code in [11000, 11001]
         res.status(400).send("Duplicate thumb")
+      else if err.name is "ValidationError"
+        message = _.map(err.errors, (i) -> i.message).join(' ')
+        res.status(400).send("Validation errors: #{message}")
       else
         next(err)
