@@ -36,7 +36,7 @@ app.use express.static(path.join(__dirname, "public"))
 app.get '/sanity', (req, res) -> res.status(404).send("Sanity not found")
 app.get '/status', (req, res) -> res.status(200).end()
 
-app.use "/thumbs", thumbsRouter
+app.use "/thumbs", thumbsRouter(app.get("env") is "development")
 
 # catch 404 and forward to error handler
 app.use (req, res, next) ->
