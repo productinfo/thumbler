@@ -1,2 +1,3 @@
 <h1><%= @error.status %></h1>
+<pre><%= @error.message %></pre>
 <pre><%= @error.stack %></pre>

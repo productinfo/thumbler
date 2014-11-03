@@ -1,1 +1,22 @@
-this is not html <%= @title %>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Latest thumbs</title>
+    <style>
+      html {
+        font-family: Ubuntu, sans-serif;
+      }
+      pre {
+        margin: 20px 0;
+        padding: 20px;
+        background: #efefef;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Latest thumbs:</h1>
+    <% for thumb in @thumbs: %>
+      <pre><%= JSON.stringify(thumb.toObject(), null, 2) %></pre>
+    <% end %>
+  </body>
+</html>

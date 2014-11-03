@@ -1,4 +1,4 @@
 #!/usr/bin/env node
-var app = require('../app');
+var app = require('../app.coffee');
 
 app.run(process.env.PORT || 7501);

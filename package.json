@@ -18,7 +18,8 @@
     "q": "~1.0.1",
     "compression": "~1.2.0",
     "eco": "~1.1.0-rc-3",
-    "consolidate": "~0.10.0"
+    "consolidate": "~0.10.0",
+    "mongoose": "~3.8.18"
   },
   "devDependencies": {
     "gulp-print": "~1.0.3",

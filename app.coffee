@@ -1,7 +1,7 @@
 process = require('process')
 _ = require('lodash')
 
-logging = require('./utils/logging')
+logging = require('./util/logging')
 logging.initialize()
 
 express = require("express")
@@ -10,11 +10,12 @@ favicon = require("serve-favicon")
 logger = require("morgan")
 cookieParser = require("cookie-parser")
 bodyParser = require("body-parser")
-router = require("./routes/index")
+thumbsRouter = require("./routes/thumbs")
 compression = require('compression')
 Q = require('q')
-cons =require('consolidate')
+cons = require('consolidate')
 eco = require('eco')
+mongoose = require('mongoose')
 
 app = express()
 
@@ -35,14 +36,13 @@ app.use express.static(path.join(__dirname, "public"))
 app.get '/sanity', (req, res) -> res.status(404).send("Sanity not found")
 app.get '/status', (req, res) -> res.status(200).end()
 
-app.use "/", router
+app.use "/thumbs", thumbsRouter
 
 # catch 404 and forward to error handler
 app.use (req, res, next) ->
   err = new Error("Not Found")
   err.status = 404
   next err
-
 
 # error handlers
 
@@ -71,6 +71,7 @@ module.exports =
     .then ->
       logging.log('Init #1: Resetting DB')
       # model.sequelize.sync(force: true)
+      mongoose.connect('mongodb://localhost/thumbler')
     .then ->
       logging.log('Init #2: Loading fixtures')
       # Load dev-hacking fixtures

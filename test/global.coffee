@@ -1,5 +1,7 @@
+process = require('process')
 before (cb) ->
-  thumbler = require('../app/app.coffee')
+  process.env.DEBUG = 'thumbler:*'
+  thumbler = require('../app.coffee')
   global.app = thumbler.app
   thumbler.resetDB()
   .then ->
