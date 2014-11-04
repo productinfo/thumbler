@@ -46,6 +46,7 @@ app.use (req, res, next) ->
 
 # error handlers
 
+
 # development error handler
 # will print stacktrace
 if app.get("env") is "development"
@@ -65,14 +66,18 @@ app.use (err, req, res, next) ->
     message: err.message
     error: {}
 
+try
+  dbUrl = process.env.DB_URL
+  dbUrl = require('./db_config.json').url if not dbUrl
+catch
+  logging.error "Please specify the DB connection URL either via DB_URL env variable or in db_config.json"
+
 module.exports =
   app: app
   resetDB: ->
     Q()
     .then ->
       logging.log('Init #1: Resetting DB')
-      # model.sequelize.sync(force: true)
-      mongoose.connect(require('./db_config.json').url)
     .then ->
       logging.log('Init #2: Loading fixtures')
       # Load dev-hacking fixtures
@@ -84,9 +89,11 @@ module.exports =
     .then ->
       logging.log('Init #3: Running server')
       # Run server
-      app.set 'port', port
-      server = app.listen app.get('port'), ->
-        logging.info('Thumbler server listening on port ' + server.address().port)
+      mongoose.connect dbUrl, (err, db) ->
+        logging.error('DB connection error', err) if err
+        app.set 'port', port
+        server = app.listen app.get('port'), ->
+          logging.info('Thumbler server listening on port ' + server.address().port)
     .fail (error) ->
       logging.error("app run error:", error)
 

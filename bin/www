@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+require('coffee-script/register');
 var app = require('../app.coffee');
 
 app.run(process.env.PORT || 7501);

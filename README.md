@@ -28,9 +28,9 @@
 
 ### 6. Configure database connection
 
-  Add db_config.json to the project folder.
+Add db_config.json to the project folder.
 
-  Sample config:
+Sample config:
 
   ```
   {
@@ -38,9 +38,13 @@
   }
   ```
 
+OR specify the DB connection url via DB_URL environment variable.
+
+  ```DB_URL=mongodb://localhost/thumbler gulp```
+
 ### 7. Run the dev environment + server
 
-  `$ gulp`
+  `$ gulp --debug=thumbler:*`
 
 This watches app directory and restarts the server every time it detects a change in code.
 Also supports chrome livereload plugin so you don't have to refresh the browser manually.

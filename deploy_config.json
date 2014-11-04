@@ -1,0 +1,16 @@
+{
+  "targets": {
+    "staging": {
+      "host": "hubert",
+      "root": "/home/apprise/thumbler/"
+    },
+    "production": {
+      "host": "23.253.218.116",
+      "root": "/home/toggl/thumbler/"
+    }
+  },
+  "deployInfo": {
+    "url": "https://deploy.toggl.com/deploy",
+    "appToken": "05f0f65c236a0f0995870d7ef4727be6e2e29a92d524f549ffc33f66354b211a1594b7671ee66bea17af81623ccd2e17a97c9bf83113844c59a36d22bd1950f6"
+  }
+}
