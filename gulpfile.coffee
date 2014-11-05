@@ -24,6 +24,7 @@ paths =
   app: [
     # For some reason, watching a blacklist-style array errors with max call stack size exceeded
     "model/**"
+    "routes/**"
     "public/**"
     "test/**"
     "util/**"
