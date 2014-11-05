@@ -30,6 +30,7 @@ paths =
     "views/**"
     "app.coffee"
     "README.md"
+    "LICENSE"
     "package.json"
   ]
   tests: [ # We can specify some ordering here
@@ -102,7 +103,7 @@ gulp.task "livereload", ->
     setTimeout (->server.changed file.path), 500
 
 gulp.task "build", ["clean"], ->
-  gulp.src(paths.app)
+  gulp.src(paths.app.concat(['node_modules/**', "bin/**", "gulpfile*"]), {base: './'})
     .pipe gulp.dest(paths.build)
 
 gulp.task "clean", (cb) ->
