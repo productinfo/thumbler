@@ -16,7 +16,7 @@ describe "Thumbs", ->
       .expect(200)
       .end(done)
 
-  it "should honour the uniqueId", (done) ->
+  it "should honour uniqueId", (done) ->
 
     uniqueId = "test_#{Math.floor(Math.random()*99999999)}"
 
