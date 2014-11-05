@@ -74,16 +74,6 @@ catch
 
 module.exports =
   app: app
-  resetDB: ->
-    Q()
-    .then ->
-      logging.log('Init #1: Resetting DB')
-    .then ->
-      logging.log('Init #2: Loading fixtures')
-      # Load dev-hacking fixtures
-      # require('./model/fixtures')(model)
-    .fail (error) ->
-      logging.error("app.resetDB error:", error)
   run: (port = 7501) ->
     Q()
     .then ->
@@ -99,6 +89,4 @@ module.exports =
 
 if not module.parent
   q = Q()
-  unless '--no-rebuild' in process.argv
-    q = q.then -> module.exports.resetDB()
   q = q.then -> module.exports.run()

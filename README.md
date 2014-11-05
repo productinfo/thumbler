@@ -50,10 +50,6 @@ This watches app directory and restarts the server every time it detects a chang
 Also supports chrome livereload plugin so you don't have to refresh the browser manually.
 Get the plugin here: https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei?hl=en
 
-By default rewrites the database on each run and file change. To turn off automatic db rebuilds, call it like this:
-
-  `$ gulp --no-rebuild`
-
 ### 8. Test Driven Development
 
 To simply run the tests
@@ -62,7 +58,7 @@ To simply run the tests
 
 To watch for file changes and run the tests every time something changes
 
-  `$ gulp tdd`
+  `$ gulp tdd --debug=thumbler*`
 
 ### 9. Enjoy
 

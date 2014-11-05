@@ -13,13 +13,26 @@ shell = require("gulp-shell")
 bump = require("gulp-bump")
 tap = require("gulp-tap")
 exec = require("child_process").exec
+print = require('gulp-print')
 
 
 # =====
 # Setup
 # =====
 paths =
-  app: "./"
+  appRoot: "app.coffee"
+  app: [
+    # For some reason, watching a blacklist-style array errors with max call stack size exceeded
+    "model/**"
+    "public/**"
+    "test/**"
+    "util/**"
+    "views/**"
+    "app.coffee"
+    "README.md"
+    "db_config.json"
+    "package.json"
+  ]
   tests: [ # We can specify some ordering here
     'test/sanity.spec.coffee'
     'test/**/*.coffee'
@@ -53,23 +66,28 @@ runTests = ->
     ))
 
 
-gulp.task 'test', -> runTests()
+gulp.task 'test', ->
+  logging = require('./util/logging.coffee')
+  logging.setEnv()
+  runTests()
 
 
 gulp.task 'tdd', (cb) ->
   # Test-Driven development: watch and rerun tests upon file changes
+  logging = require('./util/logging.coffee')
+  logging.setEnv()
   runTests()
     .on "error", ->
-  gulp.watch([paths.tests].concat(paths.app + '/**'))
+  gulp.watch((paths.app))
     .on "change", (file) ->
       runTests().on "error", ->
 
 
 gulp.task "serve", ->
   # Run server and watch for changes
-  supervisor paths.app + "app.coffee",
+  supervisor paths.appRoot,
     args: process.argv[2...]
-    watch: [paths.app]
+    watch: "."
     extensions: ["coffee"]
     ignore: []
     debug: false
@@ -81,21 +99,12 @@ gulp.task "livereload", ->
 
   # Trigger browser refresh when smth changes in app/
   server = livereload()
-  gulp.watch(paths.app + "**").on "change", (file) ->
+  gulp.watch(paths.app).on "change", (file) ->
     setTimeout (->server.changed file.path), 500
 
 gulp.task "build", ["clean"], ->
-  gulp.src [
-    paths.app + "**"
-    "!dist/"
-    "!dist/**"
-    "!__/"
-    "!__/**"
-    "!.gitignore"
-    "!deploy_config.json"
-    "!npm-debug.log"
-  ]
-  .pipe gulp.dest(paths.build)
+  gulp.src(paths.app)
+    .pipe gulp.dest(paths.build)
 
 gulp.task "clean", (cb) ->
   exec "rm -rf " + paths.build, -> cb()

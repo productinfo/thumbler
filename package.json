@@ -22,7 +22,7 @@
     "mongoose": "~3.8.18"
   },
   "devDependencies": {
-    "gulp-print": "~1.0.3",
+    "gulp-print": "~1.1.0",
     "gulp-supervisor": "~0.1.0",
     "gulp-util": "~2.2.14",
     "gulp": "~3.6.0",
