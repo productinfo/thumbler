@@ -30,7 +30,6 @@ paths =
     "views/**"
     "app.coffee"
     "README.md"
-    "db_config.json"
     "package.json"
   ]
   tests: [ # We can specify some ordering here
