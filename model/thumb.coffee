@@ -6,6 +6,7 @@ ThumbSchema = new mongoose.Schema {
   subjectId: {type: String, required: true}
   uniqueId:  {type: String, unique: true, sparse: true}
   createdAt: {type: Date, default: Date.now}
+  ip: {type: String}
 }
 
 module.exports = Thumb = mongoose.model('Thumb', ThumbSchema)

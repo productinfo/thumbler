@@ -9,6 +9,7 @@ editableFields = [
   'serviceId'
   'uniqueId'
   'subjectId'
+  'ip'
 ]
 
 createThumb = (data) ->
@@ -24,7 +25,8 @@ module.exports = (debug = false) ->
         res.render 'index', {thumbs}
 
   router.post '/', (req, res, next) ->
-    createThumb(req.body)
+    data = _.extend {}, req.body, {ip: req.ip}
+    createThumb(data)
     .then -> res.status(200).end()
     .catch (err) ->
       if err.code in [11000, 11001]
@@ -36,7 +38,8 @@ module.exports = (debug = false) ->
         next(err)
 
   router.get '/vote', (req, res, next) ->
-    createThumb(req.query)
+    data = _.extend {}, req.query, {ip: req.ip}
+    createThumb(data)
     .then (thumb) -> res.render 'vote', {thumb}
     .catch (err) ->
       if err.code in [11000, 11001]
