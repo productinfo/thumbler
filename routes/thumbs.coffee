@@ -60,7 +60,7 @@ module.exports = (debug = false) ->
     .then (thumb) -> res.render 'vote', {thumb}
     .catch (err) ->
       if err.code in [11000, 11001]
-        res.status(400).send("Duplicate thumb")
+        res.render 'vote', {thumb: null}
       else if err.name is "ValidationError"
         message = _.map(err.errors, (i) -> i.message).join(' ')
         res.status(400).send("Validation errors: #{message}")
