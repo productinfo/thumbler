@@ -5,8 +5,16 @@ ThumbSchema = new mongoose.Schema {
   serviceId: {type: String, required: true}
   subjectId: {type: String, required: true}
   uniqueId:  {type: String, unique: true, sparse: true}
+  user: {
+    name: String
+    email: String
+    company: String
+    ip: {type: String}
+  }
+  agent: {
+    name: String
+  }
   createdAt: {type: Date, default: Date.now}
-  ip: {type: String}
 }
 
 module.exports = Thumb = mongoose.model('Thumb', ThumbSchema)

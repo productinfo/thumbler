@@ -9,11 +9,28 @@ editableFields = [
   'serviceId'
   'uniqueId'
   'subjectId'
-  'ip'
+  'user.name'
+  'user.email'
+  'user.company'
+  'user.ip'
+  'agent.name'
 ]
 
+filterFields = (data, fields) ->
+  out = {}
+  for k in fields
+    continue if not data[k]?
+    parts = k.split('.')
+    lastPart = parts.pop()
+    o = out
+    for part in parts
+      o[part] ?= {}
+      o = o[part]
+    o[lastPart] = data[k]
+  out
+
 createThumb = (data) ->
-  data = _.pick data, editableFields
+  data = filterFields data, editableFields
   Q Thumb.create(data)
 
 
@@ -25,7 +42,7 @@ module.exports = (debug = false) ->
         res.render 'index', {thumbs}
 
   router.post '/', (req, res, next) ->
-    data = _.extend {}, req.body, {ip: req.ip}
+    data = _.extend {}, req.body, {'user.ip': req.ip}
     createThumb(data)
     .then -> res.status(200).end()
     .catch (err) ->
@@ -38,7 +55,7 @@ module.exports = (debug = false) ->
         next(err)
 
   router.get '/vote', (req, res, next) ->
-    data = _.extend {}, req.query, {ip: req.ip}
+    data = _.extend {}, req.query, {'user.ip': req.ip}
     createThumb(data)
     .then (thumb) -> res.render 'vote', {thumb}
     .catch (err) ->
