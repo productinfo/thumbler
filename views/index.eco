@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>Latest thumbs</title>
+    <link rel="shortcut icon" href="/favicon.ico">
     <style>
       html {
         font-family: Ubuntu, sans-serif;
