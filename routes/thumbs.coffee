@@ -1,6 +1,7 @@
 _ = require('lodash')
 express = require('express')
 Q = require('q')
+paginate = require('express-paginate')
 router = express.Router()
 Thumb = require('../model/thumb.coffee')
 
@@ -33,13 +34,52 @@ createThumb = (data) ->
   data = filterFields data, editableFields
   Q Thumb.create(data)
 
+PER_PAGE = 100
 
 module.exports = (debug = false) ->
 
-  if debug
-    router.get '/', (req, res) ->
-      Thumb.find().sort('-createdAt').limit(10).exec (err, thumbs) ->
-        res.render 'index', {thumbs}
+  router.use '/list', paginate.middleware(PER_PAGE, PER_PAGE)
+
+  router.get '/list', (req, res, next) ->
+
+    page = Math.max(1, req.param('page') or 1)
+
+    defList = Q.defer()
+    Thumb.paginate {}, page, PER_PAGE, (err, pages, thumbs, count) ->
+      return next(err) if err
+      defList.resolve({pages, thumbs, count})
+    , {sortBy: {createdAt: -1}}
+
+    defCountPos = Q.defer()
+    Thumb.count({rating: 1}).exec (err, count) ->
+      return next(err) if err
+      defCountPos.resolve(count)
+
+    defCountNeg = Q.defer()
+    Thumb.count({rating: -1}).exec (err, count) ->
+      return next(err) if err
+      defCountNeg.resolve(count)
+
+    Q.all([defList.promise, defCountPos.promise, defCountNeg.promise]).spread ({pages, thumbs, countAll}, countPos, countNeg) ->
+      res.render 'index', {
+        thumbs
+        countAll
+        countPos
+        countNeg
+        page: page
+        totalPages: pages
+        getCaseId: (thumb) ->
+          caseId = thumb.subjectId.split('_')
+          result = "#{caseId[0]}-#{caseId[1]}"
+          result += " (" + caseId[2].replace('T', ' ') + ")" if caseId[2]
+          result
+        getCaseLink: (thumb) ->
+          caseId = thumb.subjectId.split('_')
+          switch caseId[0]
+            when 'desk'
+              "https://toggl.desk.com/agent/case/#{caseId[1]}"
+            else '#'
+      }
 
   router.post '/', (req, res, next) ->
     data = _.extend {}, req.body, {'user.ip': req.ip}

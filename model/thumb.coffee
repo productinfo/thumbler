@@ -1,4 +1,5 @@
 mongoose = require('mongoose')
+paginate = require('mongoose-paginate')
 
 ThumbSchema = new mongoose.Schema {
   rating:    {type: Number, required: true}
@@ -16,5 +17,7 @@ ThumbSchema = new mongoose.Schema {
   }
   createdAt: {type: Date, default: Date.now}
 }
+
+ThumbSchema.plugin paginate
 
 module.exports = Thumb = mongoose.model('Thumb', ThumbSchema)

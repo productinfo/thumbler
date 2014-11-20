@@ -5,18 +5,128 @@
     <style>
       html {
         font-family: Ubuntu, sans-serif;
+        font-size: 13px;
+      }
+      body {
+        padding: 20px;
+        background: #eee;
+      }
+      a:link, a:visited {
+        color: #000;
+      }
+      #wrap {
+        background: white;
+        padding: 40px;
       }
       pre {
         margin: 20px 0;
         padding: 20px;
         background: #efefef;
       }
+      .general-stats {
+        float: right;
+      }
+      .count-pos, .count-neg {
+        padding: 20px 40px;
+        font-size: 16px;
+        font-weight: bold;
+        float: left;
+        margin: 20px 20px 20px 0;
+      }
+      .count-pos {
+        background: #C7E8C7;
+      }
+      .count-neg {
+        background: #FFB6B6;
+      }
+      table {
+        margin: 20px -10px;
+        border-collapse: collapse;
+        width: 100%;
+      }
+      table td, table th {
+        padding: 6px 10px;
+        text-align: left;
+      }
+      table th {
+
+      }
+      table tr.positive {
+        background: #C7E8C7;
+      }
+      table tr.negative {
+        background: #FFB6B6;
+      }
+      table thead tr {
+        border-bottom: 4px solid #eee;
+      }
+      table tbody tr:hover {
+        opacity: .8;
+      }
+      .td-rating {
+        font-family: "Courier new", sans-serif;
+      }
+      .pagination {
+        margin: 20px -10px;
+      }
+      .pagination a:link, .pagination a:visited, .pagination span {
+        display: inline-block;
+        padding: 5px 10px;
+        background: #eee;
+        text-decoration: none;
+        color: #333;
+      }
+      .pagionation .current {
+        font-weight: bold;
+      }
     </style>
   </head>
   <body>
-    <h1>Latest thumbs:</h1>
-    <% for thumb in @thumbs: %>
-      <pre><%= JSON.stringify(thumb.toObject(), null, 2) %></pre>
-    <% end %>
+    <div id="wrap">
+      <div class="general-stats">
+        <div class="count-pos">UP: <%= @countPos %></div>
+        <div class="count-neg">DOWN: <%= @countNeg %></div>
+      </div>
+      <h1>Latest thumbs:</h1>
+      <table>
+        <thead>
+          <tr>
+            <th>Rating</th>
+            <th>Case</th>
+            <th>Agent</th>
+            <th>User name</th>
+            <th>User e-mail</th>
+            <th>User company</th>
+            <th>User IP</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for thumb in @thumbs: %>
+            <tr class="<%= if thumb.rating > 0 then 'positive' else 'negative' %>">
+              <td class="td-rating"><%= if thumb.rating == 1 then ':)' else ':(' %></td>
+              <td><a href="<%= @getCaseLink(thumb) %>" target="_blank"><%= @getCaseId(thumb) %></a></td>
+              <td><%= thumb.agent?.name %></td>
+              <td><%= thumb.user?.name %></td>
+              <td><%= thumb.user?.email %></td>
+              <td><%= thumb.user?.company %></td>
+              <td><%= thumb.user?.ip %></td>
+              <td><%= thumb.createdAt %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <p class="pagination">
+        <% if @page > 1: %>
+          <a href="<%= @paginate.href(true) %>" class="prev">&laquo; Previous</a>
+          ...
+        <% end %>
+        <span class="current">(<%= @page %>/ <%= @totalPages %>)</span>
+        <% if @page < @totalPages: %>
+          ...
+          <a href="<%= @paginate.href(false) %>" class="next">Next &raquo;</a>
+        <% end %>
+      </p>
+    </div>
   </body>
 </html>
