@@ -44,6 +44,7 @@ OR specify the DB connection url via DB_URL environment variable.
 
 ### 7. Run the dev environment + server
 
+  `$ mongod --dbpath path_to_db`
   `$ gulp --debug=thumbler:*`
 
 This watches app directory and restarts the server every time it detects a change in code.
