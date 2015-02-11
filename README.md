@@ -61,7 +61,11 @@ To watch for file changes and run the tests every time something changes
 
   `$ gulp tdd --debug=thumbler*`
 
-### 9. Enjoy
+### 9. Deploy
+
+  `$ gulp deploy -e <target>`
+
+### 10. Enjoy
 
 ## Some util commands
 
