@@ -1,9 +1,10 @@
-_ = require('lodash')
-express = require('express')
-Q = require('q')
+_        = require('lodash')
+express  = require('express')
+Q        = require('q')
 paginate = require('express-paginate')
-router = express.Router()
-Thumb = require('../model/thumb.coffee')
+router   = express.Router()
+Thumb    = require('../model/thumb.coffee')
+moment   = require('moment')
 
 editableFields = [
   'rating'
@@ -51,21 +52,44 @@ module.exports = (debug = false) ->
     , {sortBy: {createdAt: -1}}
 
     defCountPos = Q.defer()
-    Thumb.count({rating: 1}).exec (err, count) ->
+    Thumb.count({rating: {$gt: 0}}).exec (err, count) ->
       return next(err) if err
       defCountPos.resolve(count)
 
     defCountNeg = Q.defer()
-    Thumb.count({rating: -1}).exec (err, count) ->
+    Thumb.count({rating: {$lt: 0}}).exec (err, count) ->
       return next(err) if err
       defCountNeg.resolve(count)
 
-    Q.all([defList.promise, defCountPos.promise, defCountNeg.promise]).spread ({pages, thumbs, countAll}, countPos, countNeg) ->
+    today = moment().startOf('day').utc().toDate()
+    weekAgo = moment().clone().subtract(1, 'week').startOf('day').utc().toDate()
+
+    defCountPosWeek = Q.defer()
+    Thumb.count({rating: {$gt: 0}, createdAt: {$lt: today, $gte: weekAgo}}).exec (err, count) ->
+      return next(err) if err
+      defCountPosWeek.resolve(count)
+
+    defCountNegWeek = Q.defer()
+    Thumb.count({rating: {$lt: 0}, createdAt: {$lt: today, $gte: weekAgo}}).exec (err, count) ->
+      return next(err) if err
+      defCountNegWeek.resolve(count)
+
+    promises = [
+      defList.promise
+      defCountPos.promise
+      defCountNeg.promise
+      defCountPosWeek.promise
+      defCountNegWeek.promise
+    ]
+
+    Q.all(promises).spread ({pages, thumbs, countAll}, countPos, countNeg, countPosWeek, countNegWeek) ->
       res.render 'index', {
         thumbs
         countAll
         countPos
         countNeg
+        countPosWeek
+        countNegWeek
         page: page
         totalPages: pages
         perPage: PER_PAGE
@@ -80,6 +104,8 @@ module.exports = (debug = false) ->
             when 'desk'
               "https://toggl.desk.com/agent/case/#{caseId[1]}"
             else '#'
+        formatDate: (date) ->
+          moment(date).format("(ddd) DD-MM-YYYY HH:mm:ss Z")
       }
 
   router.post '/', (req, res, next) ->

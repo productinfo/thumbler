@@ -27,12 +27,23 @@
       .general-stats {
         float: right;
       }
-      .count-pos, .count-neg {
-        padding: 20px 40px;
+      .general-stats .label {
+        float: left;
+        padding: 10px 20px;
         font-size: 16px;
         font-weight: bold;
+      }
+      .lastweek, .alltime {
+        float: right;
+        margin: 10px 10px 10px 10px;
+        overflow: auto;
+      }
+      .count-pos, .count-neg {
         float: left;
-        margin: 20px 20px 20px 0;
+        padding: 10px 20px;
+        margin: 0 0 0 10px;
+        font-size: 16px;
+        font-weight: bold;
       }
       .count-pos {
         background: #C7E8C7;
@@ -57,6 +68,9 @@
       }
       table tr.negative {
         background: #FFB6B6;
+      }
+      table tr.non-standard-rating {
+        background: #aaaaaa;
       }
       table thead tr {
         border-bottom: 4px solid #eee;
@@ -89,8 +103,16 @@
   <body>
     <div id="wrap">
       <div class="general-stats">
-        <div class="count-pos">UP: <%= @countPos %></div>
-        <div class="count-neg">DOWN: <%= @countNeg %></div>
+        <div class="alltime">
+          <div class="label">All time:</div>
+          <div class="count-pos"><%= @countPos %></div>
+          <div class="count-neg"><%= @countNeg %></div>
+        </div>
+        <div class="lastweek">
+          <div class="label">Last week:</div>
+          <div class="count-pos"><%= @countPosWeek %></div>
+          <div class="count-neg"><%= @countNegWeek %></div>
+        </div>
       </div>
       <h1>Latest thumbs:</h1>
       <table>
@@ -109,16 +131,16 @@
         </thead>
         <tbody>
           <% for thumb, i in @thumbs: %>
-            <tr class="<%= if thumb.rating > 0 then 'positive' else 'negative' %>">
+            <tr class="<%= if thumb.rating > 0 then 'positive' else if thumb.rating < 0 then 'negative' else 'non-standard-rating' %>">
               <td class="td-index"><%- Math.max(0, @page-1) * @perPage + i+1 %></td>
-              <td class="td-rating"><%= if thumb.rating == 1 then ':)' else ':(' %></td>
+              <td class="td-rating"><%= if thumb.rating > 0 then ':)' else ':(' %></td>
               <td><a href="<%= @getCaseLink(thumb) %>" target="_blank"><%= @getCaseId(thumb) %></a></td>
               <td><%= thumb.agent?.name %></td>
               <td><%= thumb.user?.name %></td>
               <td><%= thumb.user?.email %></td>
               <td><%= thumb.user?.company %></td>
               <td><%= thumb.user?.ip %></td>
-              <td><%= thumb.createdAt %></td>
+              <td><%= @formatDate(thumb.createdAt) %></td>
             </tr>
           <% end %>
         </tbody>
