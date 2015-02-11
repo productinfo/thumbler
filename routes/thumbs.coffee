@@ -68,6 +68,7 @@ module.exports = (debug = false) ->
         countNeg
         page: page
         totalPages: pages
+        perPage: PER_PAGE
         getCaseId: (thumb) ->
           caseId = thumb.subjectId.split('_')
           result = "#{caseId[0]}-#{caseId[1]}"

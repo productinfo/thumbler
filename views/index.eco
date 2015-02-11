@@ -67,6 +67,10 @@
       .td-rating {
         font-family: "Courier new", sans-serif;
       }
+      .td-index {
+        text-align: right;
+        color: #666;
+      }
       .pagination {
         margin: 20px -10px;
       }
@@ -92,6 +96,7 @@
       <table>
         <thead>
           <tr>
+            <th></th>
             <th>Rating</th>
             <th>Case</th>
             <th>Agent</th>
@@ -103,8 +108,9 @@
           </tr>
         </thead>
         <tbody>
-          <% for thumb in @thumbs: %>
+          <% for thumb, i in @thumbs: %>
             <tr class="<%= if thumb.rating > 0 then 'positive' else 'negative' %>">
+              <td class="td-index"><%- Math.max(0, @page-1) * @perPage + i+1 %></td>
               <td class="td-rating"><%= if thumb.rating == 1 then ':)' else ':(' %></td>
               <td><a href="<%= @getCaseLink(thumb) %>" target="_blank"><%= @getCaseId(thumb) %></a></td>
               <td><%= thumb.agent?.name %></td>
