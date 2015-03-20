@@ -11,6 +11,7 @@ logger = require("morgan")
 cookieParser = require("cookie-parser")
 bodyParser = require("body-parser")
 thumbsRouter = require("./routes/thumbs")
+statusRouter = require("./routes/status")
 compression = require('compression')
 Q = require('q')
 cons = require('consolidate')
@@ -34,7 +35,7 @@ app.use cookieParser()
 app.use express.static(path.join(__dirname, "public"))
 
 app.get '/sanity', (req, res) -> res.status(404).send("Sanity not found")
-app.get '/status', (req, res) -> res.status(200).end()
+app.use "/status", statusRouter(app.get("env") is "development")
 
 app.use "/thumbs", thumbsRouter(app.get("env") is "development")
 
