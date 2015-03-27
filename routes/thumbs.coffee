@@ -35,6 +35,24 @@ createThumb = (data) ->
   data = filterFields data, editableFields
   Q Thumb.create(data)
 
+createFilter = ({caseFilter, agentFilter}) ->
+  filter = {}
+
+  if agentFilter
+    filter['agent.name'] = new RegExp(agentFilter, 'i')
+
+  if caseFilter
+    re = new RegExp(caseFilter, 'i')
+    filter['$or'] = [
+      {'subjectId': re}
+      {'user.name': re}
+      {'user.email': re}
+      {'user.company': re}
+      {'user.ip': re}
+    ]
+
+  filter
+
 PER_PAGE = 100
 
 module.exports = (debug = false) ->
@@ -44,20 +62,25 @@ module.exports = (debug = false) ->
   router.get '/list', (req, res, next) ->
 
     page = Math.max(1, req.param('page') or 1)
+    caseFilter = req.param('case') or ''
+    agentFilter = req.param('agent') or ''
+    filter = createFilter {caseFilter, agentFilter}
 
     defList = Q.defer()
-    Thumb.paginate {}, page, PER_PAGE, (err, pages, thumbs, count) ->
+    Thumb.paginate filter, page, PER_PAGE, (err, pages, thumbs, count) ->
       return next(err) if err
       defList.resolve({pages, thumbs, count})
     , {sortBy: {createdAt: -1}}
 
     defCountPos = Q.defer()
-    Thumb.count({rating: {$gt: 0}}).exec (err, count) ->
+    f = _.extend {rating: {$gt: 0}}, filter
+    Thumb.count(f).exec (err, count) ->
       return next(err) if err
       defCountPos.resolve(count)
 
     defCountNeg = Q.defer()
-    Thumb.count({rating: {$lt: 0}}).exec (err, count) ->
+    f = _.extend {rating: {$lt: 0}}, filter
+    Thumb.count(f).exec (err, count) ->
       return next(err) if err
       defCountNeg.resolve(count)
 
@@ -65,12 +88,14 @@ module.exports = (debug = false) ->
     weekAgo = moment().clone().subtract(1, 'week').startOf('day').utc().toDate()
 
     defCountPosWeek = Q.defer()
-    Thumb.count({rating: {$gt: 0}, createdAt: {$lt: today, $gte: weekAgo}}).exec (err, count) ->
+    f = _.extend {rating: {$gt: 0}, createdAt: {$lt: today, $gte: weekAgo}}, filter
+    Thumb.count(f).exec (err, count) ->
       return next(err) if err
       defCountPosWeek.resolve(count)
 
     defCountNegWeek = Q.defer()
-    Thumb.count({rating: {$lt: 0}, createdAt: {$lt: today, $gte: weekAgo}}).exec (err, count) ->
+    f = _.extend {rating: {$lt: 0}, createdAt: {$lt: today, $gte: weekAgo}}, filter
+    Thumb.count(f).exec (err, count) ->
       return next(err) if err
       defCountNegWeek.resolve(count)
 
@@ -90,6 +115,8 @@ module.exports = (debug = false) ->
         countNeg
         countPosWeek
         countNegWeek
+        caseFilter
+        agentFilter
         page: page
         totalPages: pages
         perPage: PER_PAGE

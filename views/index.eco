@@ -26,6 +26,7 @@
       }
       .general-stats {
         float: right;
+        margin: 0 -10px;
       }
       .general-stats .label {
         float: left;
@@ -52,7 +53,7 @@
         background: #FFB6B6;
       }
       table {
-        margin: 20px -10px;
+        margin: 20px 0px;
         border-collapse: collapse;
         width: 100%;
       }
@@ -86,7 +87,7 @@
         color: #666;
       }
       .pagination {
-        margin: 20px -10px;
+        margin: 20px 0px;
       }
       .pagination a:link, .pagination a:visited, .pagination span {
         display: inline-block;
@@ -97,6 +98,27 @@
       }
       .pagionation .current {
         font-weight: bold;
+      }
+      input[type=text], textarea, select {
+        border: 1px solid #ccc;
+        padding: 8px 12px;
+        font-size: 13px;
+        color: #555;
+      }
+      button {
+        border: none;
+        padding: 9px 13px;
+        font-size: 13px;
+        color: #333;
+      }
+      button[type=submit] {
+        background: #4bc800;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+      }
+      form.filter input {
+        margin-right: 10px;
       }
     </style>
   </head>
@@ -114,7 +136,12 @@
           <div class="count-neg"><%= @countNegWeek %></div>
         </div>
       </div>
-      <h1>Latest thumbs:</h1>
+      <h1>Latest thumbs</h1>
+      <form action="?" class="filter" method="GET">
+        <input type="text" name="agent" id="id_agent" placeholder="Agent filter" value="<%= @agentFilter %>" />
+        <input type="text" name="case" id="id_case" placeholder="Case/Customer filter" value="<%= @caseFilter %>" />
+        <button type="submit">Filter</button>
+      </form>
       <table>
         <thead>
           <tr>
