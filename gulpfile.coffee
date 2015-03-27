@@ -168,11 +168,14 @@ gulp.task "deploy", ['build'], ->
 
   deployStart = Date.now()
 
+
+  sshCmd = "ssh #{targetConfig.user and targetConfig.user+'@' or ''}#{targetConfig.host} -p #{targetConfig.port}"
+
   gulp.src("")
     .pipe shell([
-      "ssh " + targetConfig.host + " \"cd " + targetConfig.root + "; mkdir -p current; rm -rf previous; cp -r current previous\""
-      "rsync --checksum --archive --compress --delete --safe-links dist/ " + ((if targetConfig.user then targetConfig.user + "@" else "")) + targetConfig.host + ":" + targetConfig.root + "current/"
-      "ssh " + targetConfig.host + " \"sudo toggl_thumbler_restart\""
+      sshCmd + " \"cd #{targetConfig.root}; mkdir -p current; rm -rf previous; cp -r current previous\""
+      "rsync -e 'ssh -p #{targetConfig.port}' --checksum --archive --compress --delete --safe-links dist/ #{targetConfig.user and targetConfig.user+'@' or ''}#{targetConfig.host}:#{targetConfig.root}current/"
+      sshCmd + " \"sudo toggl_thumbler_restart\""
     ])
     .pipe tap ->
       time = Date.now() - deployStart
