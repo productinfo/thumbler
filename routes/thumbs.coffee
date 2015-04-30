@@ -64,6 +64,7 @@ createFilter = ({caseFilter, agentFilter}) ->
       {'user.email': re}
       {'user.company': re}
       {'user.ip': re}
+      {'feedback': re}
     ]
 
   filter
