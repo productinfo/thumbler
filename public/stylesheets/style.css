@@ -164,10 +164,10 @@ p {
 	top: 0;
 	left: 0;
 	width: 100%;
-	height: 600px;
+	height: 700px;
 	z-index: 1;
 	overflow: hidden;
-	background: url("../images/b3.jpg") no-repeat left top;
+	background: url("../images/b4.jpg") no-repeat left top;
 	background-size: cover;
 }
 
@@ -563,8 +563,8 @@ form.feedback textarea {
   width: 540px;
   height: 120px;
   border: 1px solid rgba(0, 0, 0, .1);
-  background: rgba(255, 255, 255, .3);
-  color: #666;
+  background: rgba(255, 255, 255, .5);
+  color: #555;
   padding: 10px;
   font-family: 'bariol_light';
   font-size: 18px;
