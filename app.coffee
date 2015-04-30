@@ -79,12 +79,21 @@ module.exports =
     Q()
     .then ->
       logging.log('Init #3: Running server')
+      app.set 'port', port
       # Run server
-      mongoose.connect dbUrl, (err, db) ->
-        logging.error('DB connection error', err) if err
-        app.set 'port', port
-        server = app.listen app.get('port'), ->
-          logging.info('Thumbler server listening on port ' + server.address().port)
+      runServer = ->
+        mongoose.connect dbUrl, {server: {auto_reconnect: true, socketOptions: { keepAlive: 1 }}}, (err) ->
+          if err
+            logging.error('DB connection error', err)
+            logging.error('Trying again in 5s!')
+            setTimeout runServer, 5000
+            return
+          mongoose.connection.on 'error', (err) -> logging.error('DB connection error', err)
+          mongoose.connection.on 'disconnected', (err) -> logging.error('DB connection dropped', err)
+          mongoose.connection.on 'connected', -> logging.info('DB reconnected')
+          server = app.listen app.get('port'), ->
+            logging.info('Thumbler server listening on port ' + server.address().port)
+      runServer()
     .fail (error) ->
       logging.error("app run error:", error)
 

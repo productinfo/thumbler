@@ -5,7 +5,7 @@ Thumb    = require('../model/thumb.coffee')
 
 module.exports = (debug = false) ->
   router.get '/', (req, res) ->
-    Thumb.findOne (err, thumb) ->
+    Thumb.findOne {}, '_id', (err, thumb) ->
       res.status(500) if !!err
       res.status(200).end()
 
