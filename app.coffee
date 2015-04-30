@@ -17,6 +17,7 @@ Q = require('q')
 cons = require('consolidate')
 eco = require('eco')
 mongoose = require('mongoose')
+dbState = require('./util/db_state.coffee')
 
 app = express()
 
@@ -83,14 +84,27 @@ module.exports =
       # Run server
       runServer = ->
         mongoose.connect dbUrl, {server: {auto_reconnect: true, socketOptions: { keepAlive: 1 }}}, (err) ->
+
           if err
             logging.error('DB connection error', err)
             logging.error('Trying again in 5s!')
             setTimeout runServer, 5000
             return
-          mongoose.connection.on 'error', (err) -> logging.error('DB connection error', err)
-          mongoose.connection.on 'disconnected', (err) -> logging.error('DB connection dropped', err)
-          mongoose.connection.on 'connected', -> logging.info('DB reconnected')
+
+          dbState.connected = true
+
+          mongoose.connection.on 'error', (err) ->
+            logging.error('DB connection error', err)
+            dbState.connected = false
+
+          mongoose.connection.on 'disconnected', (err) ->
+            logging.error('DB connection dropped', err)
+            dbState.connected = false
+
+          mongoose.connection.on 'connected', ->
+            logging.info('DB reconnected')
+            dbState.connected = true
+
           server = app.listen app.get('port'), ->
             logging.info('Thumbler server listening on port ' + server.address().port)
       runServer()
