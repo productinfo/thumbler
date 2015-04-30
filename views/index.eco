@@ -3,124 +3,7 @@
   <head>
     <title>Latest thumbs</title>
     <link rel="shortcut icon" href="/favicon.ico">
-    <style>
-      html {
-        font-family: Ubuntu, sans-serif;
-        font-size: 13px;
-      }
-      body {
-        padding: 20px;
-        background: #eee;
-      }
-      a:link, a:visited {
-        color: #000;
-      }
-      #wrap {
-        background: white;
-        padding: 40px;
-      }
-      pre {
-        margin: 20px 0;
-        padding: 20px;
-        background: #efefef;
-      }
-      .general-stats {
-        float: right;
-        margin: 0 -10px;
-      }
-      .general-stats .label {
-        float: left;
-        padding: 10px 20px;
-        font-size: 16px;
-        font-weight: bold;
-      }
-      .lastweek, .alltime {
-        float: right;
-        margin: 10px 10px 10px 10px;
-        overflow: auto;
-      }
-      .count-pos, .count-neg {
-        float: left;
-        padding: 10px 20px;
-        margin: 0 0 0 10px;
-        font-size: 16px;
-        font-weight: bold;
-      }
-      .count-pos {
-        background: #C7E8C7;
-      }
-      .count-neg {
-        background: #FFB6B6;
-      }
-      table {
-        margin: 20px 0px;
-        border-collapse: collapse;
-        width: 100%;
-      }
-      table td, table th {
-        padding: 6px 10px;
-        text-align: left;
-      }
-      table th {
-
-      }
-      table tr.positive {
-        background: #C7E8C7;
-      }
-      table tr.negative {
-        background: #FFB6B6;
-      }
-      table tr.non-standard-rating {
-        background: #aaaaaa;
-      }
-      table thead tr {
-        border-bottom: 4px solid #eee;
-      }
-      table tbody tr:hover {
-        opacity: .8;
-      }
-      .td-rating {
-        font-family: "Courier new", sans-serif;
-      }
-      .td-index {
-        text-align: right;
-        color: #666;
-      }
-      .pagination {
-        margin: 20px 0px;
-      }
-      .pagination a:link, .pagination a:visited, .pagination span {
-        display: inline-block;
-        padding: 5px 10px;
-        background: #eee;
-        text-decoration: none;
-        color: #333;
-      }
-      .pagionation .current {
-        font-weight: bold;
-      }
-      input[type=text], textarea, select {
-        border: 1px solid #ccc;
-        padding: 8px 12px;
-        font-size: 13px;
-        color: #555;
-      }
-      button {
-        border: none;
-        padding: 9px 13px;
-        font-size: 13px;
-        color: #333;
-      }
-      button[type=submit] {
-        background: #4bc800;
-        color: white;
-        font-weight: bold;
-        cursor: pointer;
-      }
-      form.filter input {
-        margin-right: 10px;
-      }
-    </style>
+    <link href="/stylesheets/list.css" rel="stylesheet" type="text/css">
   </head>
   <body>
     <div id="wrap">
@@ -151,8 +34,7 @@
             <th>Agent</th>
             <th>User name</th>
             <th>User e-mail</th>
-            <th>User company</th>
-            <th>User IP</th>
+            <th>Feedback</th>
             <th>Date</th>
           </tr>
         </thead>
@@ -165,8 +47,10 @@
               <td><%= thumb.agent?.name %></td>
               <td><%= thumb.user?.name %></td>
               <td><%= thumb.user?.email %></td>
-              <td><%= thumb.user?.company %></td>
-              <td><%= thumb.user?.ip %></td>
+              <td class="td-feedback">
+                <%= @truncateFeedback(thumb.feedback) %>
+                <% if thumb.feedback: %><pre class="full"><%= thumb.feedback %></pre><% end %>
+              </td>
               <td><%= @formatDate(thumb.createdAt) %></td>
             </tr>
           <% end %>

@@ -6,6 +6,7 @@ ThumbSchema = new mongoose.Schema {
   serviceId: {type: String, required: true}
   subjectId: {type: String, required: true}
   uniqueId:  {type: String, unique: true, sparse: true}
+  feedback:  {type: String}
   user: {
     name: String
     email: String

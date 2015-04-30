@@ -20,26 +20,11 @@
           <div class="top">
             <h1 class="ip"><span class="big"><span class="colored">Thank you</span></span> for your feedback!</h1>
             <p class="narrow">
-              Your feedback helps us create a better product and deliver better customer support. We aim for <strong>100% satisfaction</strong> level.
-            </p>
-            <p class="narrow">
-              If you need help in the future, feel free to visit our <a href="http://support.toggl.com" target="_blank">Support Center</a>.
-            </p>
-            <p class="narrow">
-              If you wish to make any specific comments or give us further information on your response, <strong>please enter it below!</strong>
+              Your feedback is invaluable to us in delivering the best possible<br> product and customer support!
             </p>
           </div>
 
-          <form action="feedback/" class="feedback" method="post">
-            <input type="hidden" name="id" value="<%= @thumb.id %>" />
-            <p>
-              <textarea name="feedback" id="id_feedback" placeholder="Your feedback..."></textarea>
-            </p>
-            <p>
-              <button class="submit">Send</button>
-            </p>
-          </form>
-
+          <h3 id="bh">You may now close this window</h3>
           <div class="share"><div class="h-sep"></div>
             <a href="https://twitter.com/toggl" target="_blank" class="twitter"><span></span></a>
             <a href="https://www.facebook.com/Toggl" target="_blank" class="facebook"><span></span></a>

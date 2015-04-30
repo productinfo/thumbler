@@ -31,9 +31,24 @@ filterFields = (data, fields) ->
     o[lastPart] = data[k]
   out
 
-createThumb = (data) ->
+getThumb = (data) ->
+  where = {}
+  if data.uniqueId
+    where.uniqueId = data.uniqueId
+  else
+    where.serviceId = data.serviceId
+    where.subjectId = data.subjectId
+    where.rating = +data.rating
+  Q Thumb.findOne(where).exec()
+
+getOrCreateThumb = (data) ->
   data = filterFields data, editableFields
   Q Thumb.create(data)
+  .catch (err) ->
+    if err.code in [11000, 11001] # Duplicate thumb
+      getThumb(data)
+    else
+      throw err
 
 createFilter = ({caseFilter, agentFilter}) ->
   filter = {}
@@ -133,11 +148,18 @@ module.exports = (debug = false) ->
             else '#'
         formatDate: (date) ->
           moment(date).format("(ddd) DD-MM-YYYY HH:mm:ss Z")
+        truncateFeedback: (feedback) ->
+          if feedback?.length > 80
+            words = feedback.replace(/\s+/g, ' ').split(' ')
+            truncated = ""
+            truncated += " #{w}" for w in words when truncated.length < 70
+            feedback = truncated.substr(0, 80) + '...'
+          feedback
       }
 
   router.post '/', (req, res, next) ->
     data = _.extend {}, req.body, {'user.ip': req.ip}
-    createThumb(data)
+    getOrCreateThumb(data)
     .then -> res.status(200).end()
     .catch (err) ->
       if err.code in [11000, 11001]
@@ -150,13 +172,18 @@ module.exports = (debug = false) ->
 
   router.get '/vote', (req, res, next) ->
     data = _.extend {}, req.query, {'user.ip': req.ip}
-    createThumb(data)
+    getOrCreateThumb(data)
     .then (thumb) -> res.render 'vote', {thumb}
     .catch (err) ->
-      if err.code in [11000, 11001]
-        res.render 'vote', {thumb: null}
-      else if err.name is "ValidationError"
+      if err.name is "ValidationError"
         message = _.map(err.errors, (i) -> i.message).join(' ')
         res.status(400).send("Validation errors: #{message}")
       else
         next(err)
+
+  router.post '/feedback', (req, res, next) ->
+    feedback = (req.body.feedback or "").trim()
+    res.render 'thankyou' if not feedback
+    Q Thumb.update({_id: req.body.id}, {feedback: req.body.feedback}).exec()
+    .then -> res.render 'thankyou'
+    .catch next
