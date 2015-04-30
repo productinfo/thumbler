@@ -154,12 +154,22 @@ button {
   font-size: 13px;
   color: #333;
 }
+button[type=button] {
+  background: #eee;
+  color: #999;
+  cursor: pointer;
+  outline-color: #aaa;
+}
 button[type=submit] {
   background: #4bc800;
   color: white;
   font-weight: bold;
   cursor: pointer;
+  outline-color: #2b9800;
 }
 form.filter input {
   margin-right: 10px;
+}
+form.filter button.clear {
+  margin-left: 10px;
 }
