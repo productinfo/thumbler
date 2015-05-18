@@ -65,6 +65,29 @@ To watch for file changes and run the tests every time something changes
 
   `$ gulp deploy -e <target>`
 
+To deploy you need a deploy config. Create a folder called `deploy_config/` and add an index.json in it.
+
+Sample config:
+
+  ```json
+  {
+    "targets": {
+      "staging": {
+        "host": "<ip>",
+        "user": "toggl",
+        "port": "22",
+        "root": "/home/toggl/toggl_thumbler/"
+      },
+      "production": {
+        "host": "<ip>",
+        "port": "22",
+        "user": "toggl",
+        "root": "/home/toggl/toggl_thumbler/"
+      }
+    }
+  }
+  ```
+
 ### 10. Enjoy
 
 ## Some util commands

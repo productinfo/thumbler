@@ -43,10 +43,10 @@ paths =
 
 deployConfig = null
 try
-  deployConfig = require("./deploy_config.json")
+  deployConfig = require("./deploy_config")
 catch err
   deployConfig = null
-  gutil.log cl.yellow("Warning: You need a deploy_config.json to be able to deploy")
+  gutil.log cl.yellow("Warning: You need a deploy config to be able to deploy")
 
 env = gutil.env.e or "development"
 
