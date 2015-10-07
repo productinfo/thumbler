@@ -2,6 +2,7 @@ _        = require('lodash')
 express  = require('express')
 Q        = require('q')
 paginate = require('express-paginate')
+accepts  = require('accepts')
 router   = express.Router()
 Thumb    = require('../model/thumb.coffee')
 moment   = require('moment')
@@ -161,7 +162,14 @@ module.exports = (debug = false) ->
   router.post '/', (req, res, next) ->
     data = _.extend {}, req.body, {'user.ip': req.ip}
     getOrCreateThumb(data)
-    .then -> res.status(200).end()
+    .then (thumb) ->
+      switch accepts(req).type(['json', 'html'])
+        when 'html'
+          res.render('vote', {thumb})
+        when 'json'
+          res.send({id: thumb.id})
+        else
+          res.status(200).end()
     .catch (err) ->
       if err.code in [11000, 11001]
         res.status(400).send("Duplicate thumb")
@@ -174,7 +182,14 @@ module.exports = (debug = false) ->
   router.get '/vote', (req, res, next) ->
     data = _.extend {}, req.query, {'user.ip': req.ip}
     getOrCreateThumb(data)
-    .then (thumb) -> res.render 'vote', {thumb}
+    .then (thumb) ->
+      switch accepts(req).type(['json', 'html'])
+        when 'html'
+          res.render('vote', {thumb})
+        when 'json'
+          res.send({id: thumb.id})
+        else
+          res.status(200).end()
     .catch (err) ->
       if err.name is "ValidationError"
         message = _.map(err.errors, (i) -> i.message).join(' ')
@@ -186,5 +201,13 @@ module.exports = (debug = false) ->
     feedback = (req.body.feedback or "").trim()
     res.render 'thankyou' if not feedback
     Q Thumb.update({_id: req.body.id}, {feedback: req.body.feedback}).exec()
-    .then -> res.render 'thankyou'
+    .then ->
+      switch accepts(req).type(['json', 'html'])
+        when 'html'
+          res.render('thankyou')
+        when 'json'
+          res.send({id: req.body.id})
+        else
+          res.status(200).end()
+
     .catch next
