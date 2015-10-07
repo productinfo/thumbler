@@ -95,3 +95,5 @@ Sample config:
 Displays a fortune. Often comes in handy.
 
   `$ fortune`
+
+If you're missing this crucial tool you can install it by running `sudo apt-get install fortune` on linux or `brew install fortune` on osx (using brew).
