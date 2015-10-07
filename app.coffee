@@ -5,6 +5,7 @@ logging = require('./util/logging')
 logging.initialize()
 
 express = require("express")
+cors = require("cors")
 path = require("path")
 favicon = require("serve-favicon")
 logger = require("morgan")
@@ -34,6 +35,10 @@ app.use(compression())
 app.use bodyParser.urlencoded(extended: false)
 app.use cookieParser()
 app.use express.static(path.join(__dirname, "public"))
+
+app.use cors({
+  origin: (origin, cb) -> cb(null, origin in ['https://support.toggl.com'])
+})
 
 app.get '/sanity', (req, res) -> res.status(404).send("Sanity not found")
 app.use "/status", statusRouter(app.get("env") is "development")
