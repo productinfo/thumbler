@@ -55,13 +55,11 @@ createFilter = ({caseFilter, agentFilter}) ->
   filter = {}
 
   if agentFilter
+    # Enable comma-separated values + whitepsace ignoring
+    agentFilter = (_.trim(i) for i in agentFilter.split(',')).join("|")
     filter['agent.name'] = new RegExp(agentFilter, 'i')
 
   if caseFilter
-
-    # Enable comma-separated values + whitepsace ignoring
-    caseFilter = (_.trim(i) for i in caseFilter.split(',')).join("|")
-
     re = new RegExp(caseFilter, 'i')
     filter['$or'] = [
       {'subjectId': re}
