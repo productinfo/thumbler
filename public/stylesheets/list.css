@@ -167,8 +167,15 @@ button[type=submit] {
   cursor: pointer;
   outline-color: #2b9800;
 }
-form.filter input {
+form.filter input, form.filter label.checkbox {
   margin-right: 10px;
+}
+form.filter label.checkbox {
+  display: inline-block;
+  padding: 8px 14px 7px 10px;
+}
+form.filter label.checkbox:hover {
+  background: #fafafa;
 }
 form.filter button.clear {
   margin-left: 10px;

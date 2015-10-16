@@ -23,6 +23,10 @@
       <form action="?" class="filter" method="GET">
         <input type="text" name="agent" id="id_agent" placeholder="Agent filter" value="<%= @agentFilter %>" />
         <input type="text" name="case" id="id_case" placeholder="Case/Customer filter" value="<%= @caseFilter %>" />
+        <label class="checkbox">
+          <input type="checkbox" name="has_feedback" id="id_has_feedback" value="1"<%= if @hasFeedbackFilter then ' checked' else '' %>>
+          With feedback
+        </label>
         <button type="submit">Filter</button>
         <% if @agentFilter or @caseFilter: %>
           <button type="button" class="clear" onclick="document.location='?'">Clear</button>
@@ -43,7 +47,7 @@
         </thead>
         <tbody>
           <% for thumb, i in @thumbs: %>
-            <tr class="<%= if thumb.rating > 0 then 'positive' else if thumb.rating < 0 then 'negative' else 'non-standard-rating' %>">
+            <tr class="<%= if thumb.rating > 0 then 'positive' else if thumb.rating < 0 then 'negative' else 'non-standard-rating' %>" data-id="<%= thumb.id %>">
               <td class="td-index"><%- Math.max(0, @page-1) * @perPage + i+1 %></td>
               <td class="td-rating"><%= if thumb.rating > 0 then ':)' else ':(' %></td>
               <td><a href="<%= @getCaseLink(thumb) %>" target="_blank"><%= @getCaseId(thumb) %></a></td>
