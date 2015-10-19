@@ -15,6 +15,8 @@ tap = require("gulp-tap")
 exec = require("child_process").exec
 print = require('gulp-print')
 
+cl = gutil.colors
+
 
 # =====
 # Setup
@@ -33,6 +35,7 @@ paths =
     "README.md"
     "LICENSE"
     "package.json"
+    "local_config/hooks.*"
   ]
   tests: [ # We can specify some ordering here
     'test/sanity.spec.coffee'
@@ -43,14 +46,12 @@ paths =
 
 deployConfig = null
 try
-  deployConfig = require("./deploy_config")
+  deployConfig = require("./local_config/deploy_config")
 catch err
   deployConfig = null
   gutil.log cl.yellow("Warning: You need a deploy config to be able to deploy")
 
 env = gutil.env.e or "development"
-
-cl = gutil.colors
 
 
 # =====

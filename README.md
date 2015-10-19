@@ -65,7 +65,7 @@ To watch for file changes and run the tests every time something changes
 
   `$ gulp deploy -e <target>`
 
-To deploy you need a deploy config. Create a folder called `deploy_config/` and add an index.json in it.
+To deploy you need a deploy config. Create a folder called `local_config/` and add an deploy_config.json in it.
 
 Sample config:
 
@@ -89,6 +89,56 @@ Sample config:
   ```
 
 ### 10. Enjoy
+
+## Hooks
+
+You can specify some hooks to customize the app. Just add an `hooks.coffee` under `./local_config` and let it export an object
+containing any of the following keys mapping to values or functions:
+
+### corsWhitelist
+
+Return an array of domains to whitelist for CORS
+
+Example:
+
+  ```coffee
+  module.exports =
+    corsWhitelist: ->
+      ['https://support.toggl.com', 'https://support.teamweek.com']
+  ```
+
+### displaySubjectId(thumb)
+
+Return a subject id for display in the thumbs list. This let's you convert the subject id into a slightly more human-readable form.
+
+Example:
+
+  ```coffee
+  module.exports =
+    displaySubjectId: (thumb) ->
+      return thumb.subjectId.split('|').join('-')
+  ```
+
+
+### displaySubjectLink(thumb)
+
+Return a link to the subject. This let's you generate a link to the subject, given the subject id.
+
+Example:
+
+  ```coffee
+  module.exports =
+    displaySubjectLink: (thumb) ->
+      subjectId = thumb.subjectId.split('|')
+      switch subjectId[0]
+        when 'kb-toggl'
+          "https://support.toggl.com/#{subjectId[1]}"
+        when 'kb-tw'
+          "https://support.teamweek.com/#{subjectId[1]}"
+        else
+          'javascript:void(0)'
+  ```
+
 
 ## Some util commands
 

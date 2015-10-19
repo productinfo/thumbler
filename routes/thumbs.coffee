@@ -7,6 +7,11 @@ router   = express.Router()
 Thumb    = require('../model/thumb.coffee')
 moment   = require('moment')
 
+try
+  hooks = require('../local_config/hooks')
+catch e
+  hooks = {}
+
 editableFields = [
   'rating'
   'serviceId'
@@ -51,7 +56,7 @@ getOrCreateThumb = (data) ->
     else
       throw err
 
-createFilter = ({caseFilter, agentFilter, hasFeedbackFilter}) ->
+createFilter = ({subjectFilter, agentFilter, hasFeedbackFilter}) ->
   filter = {}
 
   if agentFilter
@@ -59,8 +64,8 @@ createFilter = ({caseFilter, agentFilter, hasFeedbackFilter}) ->
     agentFilter = (_.trim(i) for i in agentFilter.split(',')).join("|")
     filter['agent.name'] = new RegExp(agentFilter, 'i')
 
-  if caseFilter
-    re = new RegExp(caseFilter, 'i')
+  if subjectFilter
+    re = new RegExp(subjectFilter, 'i')
     filter['$or'] = [
       {'subjectId': re}
       {'user.name': re}
@@ -87,10 +92,10 @@ module.exports = (debug = false) ->
   router.get '/list', (req, res, next) ->
 
     page = Math.max(1, req.param('page') or 1)
-    caseFilter = req.param('case') or ''
+    subjectFilter = req.param('subject') or ''
     agentFilter = req.param('agent') or ''
     hasFeedbackFilter = !!req.param('has_feedback') or false
-    filter = createFilter {caseFilter, agentFilter, hasFeedbackFilter}
+    filter = createFilter {subjectFilter, agentFilter, hasFeedbackFilter}
 
     defList = Q.defer()
     Thumb.paginate filter, page, PER_PAGE, (err, pages, thumbs, count) ->
@@ -141,23 +146,14 @@ module.exports = (debug = false) ->
         countNeg
         countPosWeek
         countNegWeek
-        caseFilter
+        subjectFilter
         agentFilter
         hasFeedbackFilter
         page: page
         totalPages: pages
         perPage: PER_PAGE
-        getCaseId: (thumb) ->
-          caseId = thumb.subjectId.split('_')
-          result = "#{caseId[0]}-#{caseId[1]}"
-          result += " (" + caseId[2].replace('T', ' ') + ")" if caseId[2]
-          result
-        getCaseLink: (thumb) ->
-          caseId = thumb.subjectId.split('_')
-          switch caseId[0]
-            when 'desk'
-              "https://toggl.desk.com/agent/case/#{caseId[1]}"
-            else '#'
+        getSubjectId: hooks.displaySubjectId or (thumb) -> thumb.subjectId
+        getSubjectLink: hooks.displaySubjectLink or (thumb) -> 'javascript:void(0)'
         formatDate: (date) ->
           moment(date).format("(ddd) DD-MM-YYYY HH:mm:ss Z")
         truncateFeedback: (feedback) ->

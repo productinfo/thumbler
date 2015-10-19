@@ -11,4 +11,4 @@ screenshot*
 test/tmp/
 test/tmp/**
 db_config.json
-deploy_config
+local_config

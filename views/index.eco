@@ -22,13 +22,13 @@
       <h1>Latest thumbs</h1>
       <form action="?" class="filter" method="GET">
         <input type="text" name="agent" id="id_agent" placeholder="Agent filter" value="<%= @agentFilter %>" />
-        <input type="text" name="case" id="id_case" placeholder="Case/Customer filter" value="<%= @caseFilter %>" />
+        <input type="text" name="subject" id="id_subject" placeholder="Subject/User filter" value="<%= @subjectFilter %>" />
         <label class="checkbox">
           <input type="checkbox" name="has_feedback" id="id_has_feedback" value="1"<%= if @hasFeedbackFilter then ' checked' else '' %>>
           With feedback
         </label>
         <button type="submit">Filter</button>
-        <% if @agentFilter or @caseFilter: %>
+        <% if @agentFilter or @subjectFilter: %>
           <button type="button" class="clear" onclick="document.location='?'">Clear</button>
         <% end %>
       </form>
@@ -37,7 +37,7 @@
           <tr>
             <th></th>
             <th>Rating</th>
-            <th>Case</th>
+            <th>Subject</th>
             <th>Agent</th>
             <th>User name</th>
             <th>User e-mail</th>
@@ -50,7 +50,7 @@
             <tr class="<%= if thumb.rating > 0 then 'positive' else if thumb.rating < 0 then 'negative' else 'non-standard-rating' %>" data-id="<%= thumb.id %>">
               <td class="td-index"><%- Math.max(0, @page-1) * @perPage + i+1 %></td>
               <td class="td-rating"><%= if thumb.rating > 0 then ':)' else ':(' %></td>
-              <td><a href="<%= @getCaseLink(thumb) %>" target="_blank"><%= @getCaseId(thumb) %></a></td>
+              <td><a href="<%= @getSubjectLink(thumb) %>" target="_blank"><%= @getSubjectId(thumb) %></a></td>
               <td><%= thumb.agent?.name %></td>
               <td><%= thumb.user?.name %></td>
               <td><%= thumb.user?.email %></td>

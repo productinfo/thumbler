@@ -20,6 +20,11 @@ eco = require('eco')
 mongoose = require('mongoose')
 dbState = require('./util/db_state.coffee')
 
+try
+  hooks = require('./local_config/hooks')
+catch e
+  hooks = {}
+
 app = express()
 
 # view engine setup
@@ -37,7 +42,7 @@ app.use cookieParser()
 app.use express.static(path.join(__dirname, "public"))
 
 app.use cors({
-  origin: (origin, cb) -> cb(null, origin in ['https://support.toggl.com', 'https://support.teamweek.com'])
+  origin: (origin, cb) -> cb(null, origin in _.result(hooks, 'corsWhitelist', []))
 })
 
 app.get '/sanity', (req, res) -> res.status(404).send("Sanity not found")
