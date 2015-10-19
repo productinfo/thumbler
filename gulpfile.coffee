@@ -110,34 +110,6 @@ gulp.task "build", ["clean"], ->
 gulp.task "clean", (cb) ->
   exec "rm -rf " + paths.build, -> cb()
 
-notifyDeploy = (duration) ->
-
-  postNotification = (head) ->
-    postData =
-      token: localConfig.deployInfo.appToken
-      operator: process.env.USER
-      target: env
-      branch: head.branch
-      revision: head.revision
-      duration: duration
-
-    request.post
-      url: localConfig.deployInfo.url
-      method: "POST"
-      form: postData
-    , (error, response) ->
-      gutil.log cl.red("Error: Failed to send deployment notification, error was:\n"), error if error
-
-  gitInfo = (cb) ->
-    exec "echo \"`git rev-parse HEAD` `git branch | sed -n '/* /s///p'`\"", (error, stdout, stderr) ->
-      output = stdout.trim().split(" ")
-      head =
-        branch: output and output[1] or "unknown"
-        revision: output and output[0] or "unknown"
-      cb head
-
-  gitInfo(postNotification)
-
 gulp.task "deploy", ['build'], ->
 
   if not deployConfig
@@ -180,7 +152,6 @@ gulp.task "deploy", ['build'], ->
     .pipe tap ->
       time = Date.now() - deployStart
       gutil.log cl.green("Successfully deployed to ") + cl.yellow(env) + cl.green(" in ") + cl.yellow((time / 1000).toFixed(2) + " seconds")
-      # notifyDeploy(time) if deployConfig.deployInfo
 
 bumpVersion = (type) ->
   type = type or "patch"
