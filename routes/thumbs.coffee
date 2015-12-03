@@ -204,10 +204,10 @@ module.exports = (debug = false) ->
         next(err)
 
   router.post '/feedback', (req, res, next) ->
+
     feedback = (req.body.feedback or "").trim()
-    res.render 'thankyou' if not feedback
-    Q Thumb.update({_id: req.body.id}, {feedback: req.body.feedback}).exec()
-    .then ->
+
+    sendResponse = ->
       switch accepts(req).type(['json', 'html'])
         when 'html'
           res.render('thankyou')
@@ -216,4 +216,8 @@ module.exports = (debug = false) ->
         else
           res.status(200).end()
 
+    sendResponse() if not feedback
+
+    Q Thumb.update({_id: req.body.id}, {feedback: req.body.feedback}).exec()
+    .then sendResponse
     .catch next
