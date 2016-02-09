@@ -218,6 +218,6 @@ module.exports = (debug = false) ->
 
     sendResponse() if not feedback
 
-    Q Thumb.update({_id: req.body.id}, {feedback: req.body.feedback}).exec()
+    Q Thumb.update({_id: req.body.id}, {handled}).exec()
     .then sendResponse
     .catch next
