@@ -132,6 +132,9 @@ table tr.negative .td-feedback:hover {
 .td-handled {
   text-align: center;
 }
+.td-date {
+  min-width: 200px;
+}
 .pagination {
   margin: 20px 0px;
 }

@@ -47,7 +47,7 @@
             <th>User e-mail</th>
             <th>Feedback</th>
             <th class="td-handled">Handled</th>
-            <th>Date</th>
+            <th class="td-date">Date</th>
           </tr>
         </thead>
         <tbody>
