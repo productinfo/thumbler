@@ -56,7 +56,7 @@ getOrCreateThumb = (data) ->
     else
       throw err
 
-createFilter = ({subjectFilter, agentFilter, hasFeedbackFilter}) ->
+createFilter = ({subjectFilter, agentFilter, hasFeedbackFilter, notHandledFilter}) ->
   filter = {}
 
   if agentFilter
@@ -81,6 +81,11 @@ createFilter = ({subjectFilter, agentFilter, hasFeedbackFilter}) ->
       '$ne': ''
     }
 
+  if notHandledFilter
+    filter['handled'] = {
+      '$in': [false, null]
+    }
+
   filter
 
 PER_PAGE = 100
@@ -95,7 +100,8 @@ module.exports = (debug = false) ->
     subjectFilter = req.param('subject') or ''
     agentFilter = req.param('agent') or ''
     hasFeedbackFilter = !!req.param('has_feedback') or false
-    filter = createFilter {subjectFilter, agentFilter, hasFeedbackFilter}
+    notHandledFilter = !!req.param('not_handled') or false
+    filter = createFilter {subjectFilter, agentFilter, hasFeedbackFilter, notHandledFilter}
 
     defList = Q.defer()
     Thumb.paginate filter, page, PER_PAGE, (err, pages, thumbs, count) ->
@@ -149,6 +155,7 @@ module.exports = (debug = false) ->
         subjectFilter
         agentFilter
         hasFeedbackFilter
+        notHandledFilter
         page: page
         totalPages: pages
         perPage: PER_PAGE

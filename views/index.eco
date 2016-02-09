@@ -27,8 +27,12 @@
           <input type="checkbox" name="has_feedback" id="id_has_feedback" value="1"<%= if @hasFeedbackFilter then ' checked' else '' %>>
           With feedback
         </label>
+        <label class="checkbox">
+          <input type="checkbox" name="not_handled" id="id_not_handled" value="1"<%= if @notHandledFilter then ' checked' else '' %>>
+          Not handled
+        </label>
         <button type="submit">Filter</button>
-        <% if @agentFilter or @subjectFilter: %>
+        <% if @agentFilter or @subjectFilter or @hasFeedbackFilter or @notHandledFilter: %>
           <button type="button" class="clear" onclick="document.location='?'">Clear</button>
         <% end %>
       </form>
