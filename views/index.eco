@@ -42,6 +42,7 @@
             <th>User name</th>
             <th>User e-mail</th>
             <th>Feedback</th>
+            <th class="td-handled">Handled</th>
             <th>Date</th>
           </tr>
         </thead>
@@ -57,6 +58,9 @@
               <td class="td-feedback">
                 <%= @truncateFeedback(thumb.feedback) %>
                 <% if thumb.feedback: %><pre class="full"><%= thumb.feedback %></pre><% end %>
+              </td>
+              <td class="td-handled">
+                <input type="checkbox" name="handled" data-id="<%= thumb.id %>" <%= if thumb.handled then 'checked="checked"' %> />
               </td>
               <td><%= @formatDate(thumb.createdAt) %></td>
             </tr>
@@ -75,5 +79,29 @@
         <% end %>
       </p>
     </div>
+    <script src="/javascripts/jquery.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+      $(document).on('change', '.td-handled input[type=checkbox]', function(e) {
+        var target = $(e.currentTarget);
+        var checked = target.is(':checked');
+        target.prop('disabled', 'disabled');
+        $.ajax({
+          url: '/thumbs/handle',
+          data: {
+            id: target.data('id'),
+            handled: checked ? '1' : '0'
+          },
+          method: 'post',
+          success: function() {
+          },
+          error: function() {
+            target.prop('checked', checked ? '' : 'checked'); // revert value
+          },
+          complete: function() {
+            target.prop('disabled', '');
+          }
+        });
+      });
+    </script>
   </body>
 </html>

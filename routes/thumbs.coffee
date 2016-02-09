@@ -218,6 +218,16 @@ module.exports = (debug = false) ->
 
     sendResponse() if not feedback
 
+    Q Thumb.update({_id: req.body.id}, {feedback}).exec()
+    .then sendResponse
+    .catch next
+
+  router.post '/handle', (req, res, next) ->
+    handled = req.body.handled is '1'
+
+    sendResponse = ->
+      res.status(200).end()
+
     Q Thumb.update({_id: req.body.id}, {handled}).exec()
     .then sendResponse
     .catch next

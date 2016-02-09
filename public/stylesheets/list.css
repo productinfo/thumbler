@@ -129,6 +129,9 @@ table tr.negative .td-feedback:hover {
   height: 0;
   line-height: 0;
 }
+.td-handled {
+  text-align: center;
+}
 .pagination {
   margin: 20px 0px;
 }
