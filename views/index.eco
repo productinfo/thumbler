@@ -22,7 +22,7 @@
       <h1>Latest thumbs</h1>
       <form action="?" class="filter" method="GET">
         <input type="text" name="agent" id="id_agent" placeholder="Agent filter" value="<%= @agentFilter %>" />
-        <input type="text" name="subject" id="id_subject" placeholder="Subject/User filter" value="<%= @subjectFilter %>" />
+        <input type="text" name="subject" id="id_subject" placeholder="Subject/User filter" value="<%= @subjectFilter %>" title="Add a preceding * to search anywhere in the field" />
         <label class="checkbox">
           <input type="checkbox" name="has_feedback" id="id_has_feedback" value="1"<%= if @hasFeedbackFilter then ' checked' else '' %>>
           With feedback

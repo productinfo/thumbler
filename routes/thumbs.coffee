@@ -65,9 +65,14 @@ createFilter = ({subjectFilter, agentFilter, hasFeedbackFilter, notHandledFilter
     filter['agent.name'] = new RegExp(agentFilter, 'i')
 
   if subjectFilter
+    matchAnywhere = false
+    if subjectFilter[0] is '*'
+      subjectFilter = subjectFilter.substr(1)
+      matchAnywhere = true
     re = new RegExp(subjectFilter, 'i')
+    reBeginning = new RegExp('^' + subjectFilter, 'i')
     filter['$or'] = [
-      {'subjectId': re}
+      {'subjectId': if matchAnywhere then re else reBeginning}
       {'user.name': re}
       {'user.email': re}
       {'user.company': re}
