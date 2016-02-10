@@ -36,6 +36,7 @@ paths =
     "LICENSE"
     "package.json"
     "local_config/hooks.*"
+    "local_config/package.json"
   ]
   tests: [ # We can specify some ordering here
     'test/sanity.spec.coffee'
@@ -105,7 +106,7 @@ gulp.task "livereload", ->
     setTimeout (->server.changed file.path), 500
 
 gulp.task "build", ["clean"], ->
-  gulp.src(paths.app.concat(['node_modules/**', "bin/**", "gulpfile*"]), {base: './'})
+  gulp.src(paths.app.concat(['node_modules/**', 'local_config/node_modules/**', "bin/**", "gulpfile*"]), {base: './'})
     .pipe gulp.dest(paths.build)
 
 gulp.task "clean", (cb) ->
