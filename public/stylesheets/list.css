@@ -153,6 +153,7 @@ input[type=text], textarea, select {
   padding: 8px 12px;
   font-size: 13px;
   color: #555;
+  width: 130px;
 }
 button {
   border: none;
@@ -185,4 +186,21 @@ form.filter label.checkbox:hover {
 }
 form.filter button.clear {
   margin-left: 10px;
+}
+input#id_date_from, input#id_date_to {
+  width: 80px;
+}
+
+#ui-datepicker-div, .ui-datepicker .ui-datepicker-header {
+  border-radius: 0px !important;
+}
+.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
+  background: #e0e0e0 !important;
+  border-color: #a0a0a0 !important;
+  color: #555 !important;
+}
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
+  background: #C7E8C7 !important;
+  border-color: #94B794 !important;
+  color: black !important;
 }

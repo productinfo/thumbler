@@ -56,7 +56,7 @@ getOrCreateThumb = (data) ->
     else
       throw err
 
-createFilter = ({subjectFilter, agentFilter, hasFeedbackFilter, notHandledFilter}) ->
+createFilter = ({subjectFilter, agentFilter, dateFromFilter, dateToFilter, hasFeedbackFilter, notHandledFilter}) ->
   filter = {}
 
   if agentFilter
@@ -79,6 +79,21 @@ createFilter = ({subjectFilter, agentFilter, hasFeedbackFilter, notHandledFilter
       {'user.ip': re}
       {'feedback': re}
     ]
+
+  if dateFromFilter or dateToFilter
+
+    d = dateFromFilter.split('/')
+    if d.length is 3
+      dateFrom = "#{d[2]}-#{_.padStart(d[1], 2, '0')}-#{d[0]}T00:00:00Z"
+
+    d = dateToFilter.split('/')
+    if d.length is 3
+      dateTo = "#{d[2]}-#{_.padStart(d[1], 2, '0')}-#{d[0]}T23:59:59Z"
+
+    if dateFrom or dateTo
+      filter['createdAt'] = {}
+      filter['createdAt']['$gte'] = new Date(dateFrom) if dateFrom
+      filter['createdAt']['$lte'] = new Date(dateTo) if dateTo
 
   if hasFeedbackFilter
     filter['feedback'] = {
@@ -104,9 +119,11 @@ module.exports = (debug = false) ->
     page = Math.max(1, req.param('page') or 1)
     subjectFilter = req.param('subject') or ''
     agentFilter = req.param('agent') or ''
+    dateFromFilter = req.param('date_from') or ''
+    dateToFilter = req.param('date_to') or ''
     hasFeedbackFilter = !!req.param('has_feedback') or false
     notHandledFilter = !!req.param('not_handled') or false
-    filter = createFilter {subjectFilter, agentFilter, hasFeedbackFilter, notHandledFilter}
+    filter = createFilter {subjectFilter, agentFilter, dateFromFilter, dateToFilter, hasFeedbackFilter, notHandledFilter}
 
     defList = Q.defer()
     Thumb.paginate filter, page, PER_PAGE, (err, pages, thumbs, count) ->
@@ -159,6 +176,8 @@ module.exports = (debug = false) ->
         countNegWeek
         subjectFilter
         agentFilter
+        dateFromFilter
+        dateToFilter
         hasFeedbackFilter
         notHandledFilter
         page: page
@@ -167,7 +186,7 @@ module.exports = (debug = false) ->
         getSubjectId: hooks.displaySubjectId or (thumb) -> thumb.subjectId
         getSubjectLink: hooks.displaySubjectLink or (thumb) -> 'javascript:void(0)'
         formatDate: (date) ->
-          moment(date).format("(ddd) DD-MM-YYYY HH:mm:ss Z")
+          moment(date).utc().format("DD/MM/YYYY HH:mm:ss")
         truncateFeedback: (feedback) ->
           if feedback?.length > 80
             words = feedback.replace(/\s+/g, ' ').split(' ')
