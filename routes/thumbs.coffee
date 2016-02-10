@@ -253,6 +253,10 @@ module.exports = (debug = false) ->
     .then sendResponse
     .catch next
 
+    if hooks.feedbackSaved
+      Q Thumb.findOne({_id: req.body.id}).exec()
+      .then hooks.feedbackSaved
+
   router.post '/handle', (req, res, next) ->
     handled = req.body.handled is '1'
 
