@@ -147,13 +147,13 @@ module.exports = (debug = false) ->
     weekAgo = moment().clone().subtract(1, 'week').startOf('day').utc().toDate()
 
     defCountPosWeek = Q.defer()
-    f = _.extend {rating: {$gt: 0}, createdAt: {$lt: today, $gte: weekAgo}}, filter
+    f = _.extend {}, filter, {rating: {$gt: 0}, createdAt: {$lt: today, $gte: weekAgo}}
     Thumb.count(f).exec (err, count) ->
       return next(err) if err
       defCountPosWeek.resolve(count)
 
     defCountNegWeek = Q.defer()
-    f = _.extend {rating: {$lt: 0}, createdAt: {$lt: today, $gte: weekAgo}}, filter
+    f = _.extend {}, filter, {rating: {$lt: 0}, createdAt: {$lt: today, $gte: weekAgo}}
     Thumb.count(f).exec (err, count) ->
       return next(err) if err
       defCountNegWeek.resolve(count)

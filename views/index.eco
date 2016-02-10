@@ -12,7 +12,7 @@
     <div id="wrap">
       <div class="general-stats">
         <div class="alltime">
-          <div class="label">All time:</div>
+          <div class="label">Total:</div>
           <div class="count-pos"><%= @countPos %></div>
           <div class="count-neg"><%= @countNeg %></div>
         </div>
