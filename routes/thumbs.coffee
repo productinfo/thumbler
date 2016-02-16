@@ -48,8 +48,9 @@ getThumb = (data) ->
   Q Thumb.findOne(where).exec()
 
 getOrCreateThumb = (data) ->
-  data = filterFields data, editableFields
-  Q Thumb.create(data)
+  thumbData = filterFields(data, editableFields)
+  thumbData = hooks.preprocessThumb?(thumbData, data) or thumbData
+  Q Thumb.create(thumbData)
   .catch (err) ->
     if err.code in [11000, 11001] # Duplicate thumb
       getThumb(data)
