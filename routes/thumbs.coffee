@@ -7,6 +7,13 @@ router   = express.Router()
 Thumb    = require('../model/thumb.coffee')
 moment   = require('moment')
 
+moment.locale 'en', {
+  week: {
+    dow: 1,
+    doy: 4
+  }
+}
+
 try
   hooks = require('../local_config/hooks')
 catch e
@@ -144,17 +151,17 @@ module.exports = (debug = false) ->
       return next(err) if err
       defCountNeg.resolve(count)
 
-    today = moment().startOf('day').utc().toDate()
-    weekAgo = moment().clone().subtract(1, 'week').startOf('day').utc().toDate()
+    lastWeekStart = moment().utc().subtract(1, 'week').startOf('week').toDate()
+    lastWeekEnd = moment().utc().subtract(1, 'week').endOf('week').toDate()
 
     defCountPosWeek = Q.defer()
-    f = _.extend {}, filter, {rating: {$gt: 0}, createdAt: {$lt: today, $gte: weekAgo}}
+    f = _.extend {}, filter, {rating: {$gt: 0}, createdAt: {$lte: lastWeekEnd, $gte: lastWeekStart}}
     Thumb.count(f).exec (err, count) ->
       return next(err) if err
       defCountPosWeek.resolve(count)
 
     defCountNegWeek = Q.defer()
-    f = _.extend {}, filter, {rating: {$lt: 0}, createdAt: {$lt: today, $gte: weekAgo}}
+    f = _.extend {}, filter, {rating: {$lt: 0}, createdAt: {$lte: lastWeekEnd, $gte: lastWeekStart}}
     Thumb.count(f).exec (err, count) ->
       return next(err) if err
       defCountNegWeek.resolve(count)
