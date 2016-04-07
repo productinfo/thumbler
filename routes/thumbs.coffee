@@ -62,7 +62,7 @@ getOrCreateThumb = (data) ->
     Q Thumb.create(thumbData)
     .catch (err) ->
       if err.code in [11000, 11001] # Duplicate thumb
-        getThumb(data)
+        getThumb(thumbData)
       else
         throw err
 
