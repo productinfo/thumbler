@@ -220,7 +220,7 @@ module.exports = (debug = false) ->
     .catch (err) ->
       if err.code in [11000, 11001]
         res.status(400).render('error', {
-          error: _.assign new Error(), {title: 'Duplicate thumb', 'This thumb has already been created. Nothing to see here.'}
+          error: _.assign new Error(), {title: 'Duplicate thumb', message: 'This thumb has already been created. Nothing to see here.'}
         })
       else if err.name is "ValidationError"
         res.status(400).render('error', {error: err})
