@@ -55,16 +55,17 @@ getThumb = (data) ->
   Q Thumb.findOne(where).exec()
 
 getOrCreateThumb = (data) ->
+  thumbData = null
   Q.Promise (resolve, reject) ->
     thumbData = filterFields(data, editableFields)
     hooks.validateThumb?(thumbData)
     thumbData = hooks.preprocessThumb?(thumbData, data) or thumbData
-    Q Thumb.create(thumbData)
-    .catch (err) ->
-      if err.code in [11000, 11001] # Duplicate thumb
-        getThumb(thumbData)
-      else
-        throw err
+    resolve Q Thumb.create(thumbData)
+  .catch (err) ->
+    if err.code in [11000, 11001] # Duplicate thumb
+      return getThumb(thumbData)
+    else
+      throw err
 
 createFilter = ({subjectFilter, agentFilter, dateFromFilter, dateToFilter, hasFeedbackFilter, notHandledFilter}) ->
   filter = {}
