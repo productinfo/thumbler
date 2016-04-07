@@ -55,14 +55,16 @@ getThumb = (data) ->
   Q Thumb.findOne(where).exec()
 
 getOrCreateThumb = (data) ->
-  thumbData = filterFields(data, editableFields)
-  thumbData = hooks.preprocessThumb?(thumbData, data) or thumbData
-  Q Thumb.create(thumbData)
-  .catch (err) ->
-    if err.code in [11000, 11001] # Duplicate thumb
-      getThumb(data)
-    else
-      throw err
+  Q.Promise (resolve, reject) ->
+    thumbData = filterFields(data, editableFields)
+    hooks.validateThumb?(thumbData)
+    thumbData = hooks.preprocessThumb?(thumbData, data) or thumbData
+    Q Thumb.create(thumbData)
+    .catch (err) ->
+      if err.code in [11000, 11001] # Duplicate thumb
+        getThumb(data)
+      else
+        throw err
 
 createFilter = ({subjectFilter, agentFilter, dateFromFilter, dateToFilter, hasFeedbackFilter, notHandledFilter}) ->
   filter = {}
@@ -217,10 +219,11 @@ module.exports = (debug = false) ->
           res.status(200).end()
     .catch (err) ->
       if err.code in [11000, 11001]
-        res.status(400).send("Duplicate thumb")
+        res.status(400).render('error', {
+          error: _.assign new Error(), {title: 'Duplicate thumb', 'This thumb has already been created. Nothing to see here.'}
+        })
       else if err.name is "ValidationError"
-        message = _.map(err.errors, (i) -> i.message).join(' ')
-        res.status(400).send("Validation errors: #{message}")
+        res.status(400).render('error', {error: err})
       else
         next(err)
 
@@ -237,8 +240,7 @@ module.exports = (debug = false) ->
           res.status(200).end()
     .catch (err) ->
       if err.name is "ValidationError"
-        message = _.map(err.errors, (i) -> i.message).join(' ')
-        res.status(400).send("Validation errors: #{message}")
+        res.status(400).render('error', {error: err})
       else
         next(err)
 

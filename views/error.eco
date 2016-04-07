@@ -1,3 +1,32 @@
-<h1><%= @error.status %></h1>
-<pre><%= @error.message %></pre>
-<pre><%= @error.stack %></pre>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+    <meta name="viewport" id="viewport-meta" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="/stylesheets/style.css" rel="stylesheet" type="text/css">
+    <title>Error: <%= @error.title or @error.status %></title>
+  </head>
+  <body class="js flexbox rgba backgroundsize borderradius boxshadow svg placeholder">
+    <div id="wrap">
+      <div id="video-container">
+      </div>
+
+      <div id="main">
+        <div class="wrap">
+
+          <a href="https://www.toggl.com/" target="_blank" id="logo"></a>
+
+          <div class="top">
+            <h1 class="ip"><span class="big"><span class="colored">Error: <%= @error.title or @error.status %></h1>
+            <p class="narrow">
+              <%= @error.message %>
+            </p>
+          </div>
+
+          <h3 id="bh">You either followed an old link or something is broken. <br />Sorry for the inconvenience.</h3>
+
+      </div>
+    </div>
+  </body>
+</html>
