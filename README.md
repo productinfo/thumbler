@@ -4,6 +4,8 @@
 
 ### 1. Install MongoDB
 
+Also, if you'd like a GUI to inspect data with, you can try [RoboMongo](https://robomongo.org/download).
+
 ### 2. Install NodeJS from http://nodejs.org/. Npm should come with it.
 
 ### 3. Install gulp & coffeescript globally
@@ -89,6 +91,18 @@ Sample config:
   ```
 
 ### 10. Enjoy
+
+## Useful info
+
+App runs on `http://localhost:7501`
+
+View list of thumbs at `http://localhost:7501/thumbs/list`
+
+Get a summary of yesterday's thumbs for a service at `http://localhost:7501/thumbs/summary?serviceId=your-service-id`
+
+If you have a db dump from someone, do this to import it:
+
+`mongorestore -d thumbler path/to/thumbs.bson`
 
 ## Hooks
 
