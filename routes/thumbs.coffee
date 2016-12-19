@@ -125,6 +125,14 @@ module.exports = (debug = false) ->
 
   router.use '/list', paginate.middleware(PER_PAGE, PER_PAGE)
 
+  router.get '/summary', (req, res, next) ->
+    today = moment().utc().startOf('day').toDate()
+    yesterday = moment().utc().subtract(1, 'day').startOf('day').toDate()
+    serviceId = req.query.serviceId
+    Thumb
+      .getServiceSummary(serviceId, yesterday, today)
+      .exec((err, result) -> res.json result)
+
   router.get '/list', (req, res, next) ->
 
     page = Math.max(1, req.param('page') or 1)
