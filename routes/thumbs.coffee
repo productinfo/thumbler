@@ -145,9 +145,9 @@ module.exports = (debug = false) ->
     filter = createFilter {subjectFilter, agentFilter, dateFromFilter, dateToFilter, hasFeedbackFilter, notHandledFilter}
 
     defList = Q.defer()
-    Thumb.paginate filter, page, PER_PAGE, (err, pages, thumbs, count) ->
+    Thumb.paginate filter, { page, limit: PER_PAGE }, (err, {pages, docs, total}) ->
       return next(err) if err
-      defList.resolve({pages, thumbs, count})
+      defList.resolve({pages, thumbs: docs, countAll: total})
     , {sortBy: {createdAt: -1}}
 
     defCountPos = Q.defer()

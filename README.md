@@ -16,12 +16,12 @@ Also, if you'd like a GUI to inspect data with, you can try [RoboMongo](https://
 
   ```
   $ node --version
-  v0.10.25
+  v7.9.0
   ```
 
   ```
   $ npm --version
-  1.3.24
+  4.2.0
   ```
 
 ### 5. Cd into project directory and issue
