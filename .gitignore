@@ -12,3 +12,5 @@ test/tmp/
 test/tmp/**
 db_config.json
 local_config
+/data
+/.vscode

@@ -7,7 +7,10 @@ router   = express.Router()
 Thumb    = require('../model/thumb.coffee')
 moment   = require('moment')
 
-moment.locale 'en', {
+# from moment docs:
+# dow == 1 and doy == 4 means week starts Monday and first week that has Thursday is the
+# first week of the year (but doy is NOT simply Thursday).
+moment.updateLocale 'en', {
   week: {
     dow: 1,
     doy: 4
@@ -135,19 +138,19 @@ module.exports = (debug = false) ->
 
   router.get '/list', (req, res, next) ->
 
-    page = Math.max(1, req.param('page') or 1)
-    subjectFilter = req.param('subject') or ''
-    agentFilter = req.param('agent') or ''
-    dateFromFilter = req.param('date_from') or ''
-    dateToFilter = req.param('date_to') or ''
-    hasFeedbackFilter = !!req.param('has_feedback') or false
-    notHandledFilter = !!req.param('not_handled') or false
+    page = Math.max(1, req.params.page or 1)
+    subjectFilter = req.params.subject or ''
+    agentFilter = req.params.agent or ''
+    dateFromFilter = req.params.date_from or ''
+    dateToFilter = req.params.date_to or ''
+    hasFeedbackFilter = !!req.params.has_feedback or false
+    notHandledFilter = !!req.params.not_handled or false
     filter = createFilter {subjectFilter, agentFilter, dateFromFilter, dateToFilter, hasFeedbackFilter, notHandledFilter}
 
     defList = Q.defer()
-    Thumb.paginate filter, page, PER_PAGE, (err, pages, thumbs, count) ->
+    Thumb.paginate filter, { page, limit: PER_PAGE }, (err, result) ->
       return next(err) if err
-      defList.resolve({pages, thumbs, count})
+      defList.resolve({pages: result.pages, thumbs: result.docs, count: result.total})
     , {sortBy: {createdAt: -1}}
 
     defCountPos = Q.defer()

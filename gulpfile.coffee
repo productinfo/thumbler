@@ -101,9 +101,9 @@ gulp.task "serve", ->
 gulp.task "livereload", ->
 
   # Trigger browser refresh when smth changes in app/
-  server = livereload()
+  livereload.listen()
   gulp.watch(paths.app).on "change", (file) ->
-    setTimeout (->server.changed file.path), 500
+    setTimeout (->livereload.changed file.path), 500
 
 gulp.task "build", ["clean"], ->
   gulp.src(paths.app.concat(['node_modules/**', 'local_config/node_modules/**', "bin/**", "gulpfile*"]), {base: './'})

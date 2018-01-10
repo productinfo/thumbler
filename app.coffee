@@ -93,7 +93,8 @@ module.exports =
       app.set 'port', port
       # Run server
       runServer = ->
-        mongoose.connect dbUrl, {server: {auto_reconnect: true, socketOptions: { keepAlive: 1 }}}, (err) ->
+        mongoose.Promise = Q.Promise;
+        mongoose.connect dbUrl, {useMongoClient: true, autoReconnect: true, keepAlive: 1}, (err) ->
 
           if err
             logging.error('DB connection error', err)
