@@ -3,10 +3,8 @@
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
- * DS104: Avoid inline assignments
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-let dbUrl, hooks;
 const process = require('process');
 const _ = require('lodash');
 
@@ -29,6 +27,7 @@ const eco = require('eco');
 const mongoose = require('mongoose');
 const dbState = require('./util/db_state.coffee');
 
+let hooks;
 try {
   hooks = require('./local_config/hooks');
 } catch (e) {
@@ -94,6 +93,7 @@ app.use(function(err, req, res, next) {
     error: {}
   });});
 
+let dbUrl;
 try {
   dbUrl = process.env.DB_URL;
   if (!dbUrl) { dbUrl = require('./db_config.json').url; }
