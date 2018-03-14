@@ -2,7 +2,7 @@ const process = require('process')
 const _ = require('lodash')
 
 module.exports = {
-  setEnv() {
+  setEnv () {
     // if no DEBUG, try to parse it from --debug=... argument
     if (!process.env.DEBUG) {
       const debugFlag = _.find(process.argv, i => i.match(/^--debug/))
@@ -13,7 +13,7 @@ module.exports = {
     }
   },
 
-  initialize() {
+  initialize () {
     this.setEnv()
 
     const debug = require('debug')

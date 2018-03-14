@@ -12,7 +12,7 @@
   },
   "eslintIgnore": ["/public/**"],
   "lint-staged": {
-    "*.{js,json,css,md}": ["prettier --write", "git add"]
+    "*.{js,json,css,md}": ["prettier-eslint --write", "git add"]
   },
   "workspaces": ["toggl/*"],
   "dependencies": {

@@ -4,7 +4,7 @@ const router = express.Router()
 const Thumb = require('../model/thumb')
 const dbState = require('../util/db_state')
 
-module.exports = function(debug = false) {
+module.exports = function (debug = false) {
   return router.get('/', (req, res) =>
     dbState
       .ifConnected()

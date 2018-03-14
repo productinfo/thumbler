@@ -36,7 +36,7 @@ const editableFields = [
   'agent.name'
 ]
 
-const filterFields = function(data, fields) {
+const filterFields = function (data, fields) {
   const out = {}
   for (let k of fields) {
     if (!data[k]) {
@@ -54,7 +54,7 @@ const filterFields = function(data, fields) {
   return out
 }
 
-const getThumb = function(data) {
+const getThumb = function (data) {
   const where = {}
   if (data.uniqueId) {
     where.uniqueId = data.uniqueId
@@ -66,7 +66,7 @@ const getThumb = function(data) {
   return Q(Thumb.findOne(where).exec())
 }
 
-const getOrCreateThumb = function(data) {
+const getOrCreateThumb = function (data) {
   let thumbData = null
   return Q.Promise((resolve, reject) => {
     thumbData = filterFields(data, editableFields)
@@ -88,7 +88,7 @@ const getOrCreateThumb = function(data) {
   })
 }
 
-const createFilter = function({
+const createFilter = function ({
   subjectFilter,
   agentFilter,
   dateFromFilter,
@@ -166,7 +166,7 @@ const createFilter = function({
 
 const PER_PAGE = 100
 
-module.exports = function(debug = false) {
+module.exports = function (debug = false) {
   router.use('/list', paginate.middleware(PER_PAGE, PER_PAGE))
 
   router.get('/summary', (req, res, next) => {
@@ -206,7 +206,7 @@ module.exports = function(debug = false) {
     Thumb.paginate(
       filter,
       { page, limit: PER_PAGE },
-      function(err, result) {
+      function (err, result) {
         if (err) {
           return next(err)
         }
@@ -221,7 +221,7 @@ module.exports = function(debug = false) {
 
     const defCountPos = Q.defer()
     let f = _.extend({ rating: { $gt: 0 } }, filter)
-    Thumb.count(f).exec(function(err, count) {
+    Thumb.count(f).exec(function (err, count) {
       if (err) {
         return next(err)
       }
@@ -230,7 +230,7 @@ module.exports = function(debug = false) {
 
     const defCountNeg = Q.defer()
     f = _.extend({ rating: { $lt: 0 } }, filter)
-    Thumb.count(f).exec(function(err, count) {
+    Thumb.count(f).exec(function (err, count) {
       if (err) {
         return next(err)
       }
@@ -253,7 +253,7 @@ module.exports = function(debug = false) {
       rating: { $gt: 0 },
       createdAt: { $lte: lastWeekEnd, $gte: lastWeekStart }
     })
-    Thumb.count(f).exec(function(err, count) {
+    Thumb.count(f).exec(function (err, count) {
       if (err) {
         return next(err)
       }
@@ -265,7 +265,7 @@ module.exports = function(debug = false) {
       rating: { $lt: 0 },
       createdAt: { $lte: lastWeekEnd, $gte: lastWeekStart }
     })
-    Thumb.count(f).exec(function(err, count) {
+    Thumb.count(f).exec(function (err, count) {
       if (err) {
         return next(err)
       }
@@ -307,12 +307,12 @@ module.exports = function(debug = false) {
           getSubjectId: hooks.displaySubjectId || (thumb => thumb.subjectId),
           getSubjectLink:
             hooks.displaySubjectLink || (thumb => 'javascript:void(0)'),
-          formatDate(date) {
+          formatDate (date) {
             return moment(date)
               .utc()
               .format('DD/MM/YYYY HH:mm:ss')
           },
-          truncateFeedback(feedback) {
+          truncateFeedback (feedback) {
             if (feedback && feedback.length > 80) {
               const words = feedback.replace(/\s+/g, ' ').split(' ')
               let truncated = ''
@@ -332,7 +332,7 @@ module.exports = function(debug = false) {
   router.post('/', (req, res, next) => {
     const data = _.extend({}, req.body, { 'user.ip': req.ip })
     return getOrCreateThumb(data)
-      .then(function(thumb) {
+      .then(function (thumb) {
         switch (accepts(req).type(['json', 'html'])) {
           case 'html':
             res.render('vote', { thumb })
@@ -342,7 +342,7 @@ module.exports = function(debug = false) {
             res.status(200).end()
         }
       })
-      .catch(function(err) {
+      .catch(function (err) {
         if ([11000, 11001].includes(err.code)) {
           return res.status(400).render('error', {
             error: _.assign(new Error(), {
@@ -362,7 +362,7 @@ module.exports = function(debug = false) {
   router.get('/vote', (req, res, next) => {
     const data = _.extend({}, req.query, { 'user.ip': req.ip })
     return getOrCreateThumb(data)
-      .then(function(thumb) {
+      .then(function (thumb) {
         switch (accepts(req).type(['json', 'html'])) {
           case 'html':
             res.render('vote', { thumb })
@@ -372,7 +372,7 @@ module.exports = function(debug = false) {
             res.status(200).end()
         }
       })
-      .catch(function(err) {
+      .catch(function (err) {
         if (err.name === 'ValidationError') {
           return res.status(400).render('error', { error: err })
         } else {

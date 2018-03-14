@@ -30,7 +30,7 @@ Returns summary of positive/negative thumbs for a particular service, grouped by
 @param  {Date} to   Datetime to (exclusive)
 @return {mongoose.Aggregate} Aggregate object you can call exec() on
 */
-ThumbSchema.statics.getServiceSummary = function(serviceId, from, to) {
+ThumbSchema.statics.getServiceSummary = function (serviceId, from, to) {
   // If you want to put this into CLI, see QUERIES.md for copy-paste
   return this.aggregate(
     {

@@ -121,7 +121,7 @@ gulp.task('build', ['clean'], () =>
 
 gulp.task('clean', cb => exec(`rm -rf ${paths.build}`, () => cb()))
 
-gulp.task('deploy', ['build'], function() {
+gulp.task('deploy', ['build'], function () {
   if (!deployConfig) {
     gutil.log(
       cl.red('Error: You need a deploy_config.json to be able to deploy')
@@ -192,7 +192,7 @@ gulp.task('deploy', ['build'], function() {
       ])
     )
     .pipe(
-      tap(function() {
+      tap(function () {
         const time = Date.now() - deployStart
         return gutil.log(
           cl.green('Successfully deployed to ') +

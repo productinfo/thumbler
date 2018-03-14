@@ -101,18 +101,18 @@ try {
 
 module.exports = {
   app,
-  run(port = 7501) {
+  run (port = 7501) {
     return Q()
-      .then(function() {
+      .then(function () {
         logging.log('Init #3: Running server')
         app.set('port', port)
         // Run server
-        var runServer = function() {
+        var runServer = function () {
           mongoose.Promise = Q.Promise
           return mongoose.connect(
             dbUrl,
             { useMongoClient: true, autoReconnect: true, keepAlive: 1 },
-            function(err) {
+            function (err) {
               let server
               if (err) {
                 logging.error('DB connection error', err)
@@ -123,17 +123,17 @@ module.exports = {
 
               dbState.connected = true
 
-              mongoose.connection.on('error', function(err) {
+              mongoose.connection.on('error', function (err) {
                 logging.error('DB connection error', err)
                 return (dbState.connected = false)
               })
 
-              mongoose.connection.on('disconnected', function(err) {
+              mongoose.connection.on('disconnected', function (err) {
                 logging.error('DB connection dropped', err)
                 return (dbState.connected = false)
               })
 
-              mongoose.connection.on('connected', function() {
+              mongoose.connection.on('connected', function () {
                 logging.info('DB reconnected')
                 return (dbState.connected = true)
               })
