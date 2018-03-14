@@ -115,10 +115,11 @@ Return an array of domains to whitelist for CORS
 
 Example:
 
-  ```coffee
-  module.exports =
-    corsWhitelist: ->
+  ```javascript
+  module.exports = {
+    corsWhitelist: () =>
       ['https://support.toggl.com', 'https://support.teamweek.com']
+  }
   ```
 
 ### displaySubjectId(thumb)
@@ -127,10 +128,11 @@ Return a subject id for display in the thumbs list. This let's you convert the s
 
 Example:
 
-  ```coffee
-  module.exports =
-    displaySubjectId: (thumb) ->
-      return thumb.subjectId.split('|').join('-')
+  ```javascript
+  module.exports = {
+    displaySubjectId: (thumb) =>
+      thumb.subjectId.split('|').join('-')
+  }
   ```
 
 
@@ -140,17 +142,18 @@ Return a link to the subject. This let's you generate a link to the subject, giv
 
 Example:
 
-  ```coffee
-  module.exports =
+  ```javascript
+  module.exports = {
     displaySubjectLink: (thumb) ->
       subjectId = thumb.subjectId.split('|')
       switch subjectId[0]
         when 'kb-toggl'
-          "https://support.toggl.com/#{subjectId[1]}"
+          return `https://support.toggl.com/${subjectId[1]}`
         when 'kb-tw'
-          "https://support.teamweek.com/#{subjectId[1]}"
+          return `https://support.teamweek.com/${subjectId[1]}`
         else
-          'javascript:void(0)'
+          return 'javascript:void(0)'
+  }
   ```
 
 
