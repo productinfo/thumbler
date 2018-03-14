@@ -1,0 +1,34 @@
+version: '3.4'
+services:
+  thumbler:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    image: node:8.10.0-alpine
+    working_dir: /thumbler
+    environment:
+      DB_URL: mongodb://mongodb/thumbler
+    command: yarn start
+    ports:
+      - "7501:7501"
+    volumes:
+      - type: bind
+        source: .
+        target: /thumbler
+    secrets:
+      - host_ssh_key
+  mongodb:
+    image: mongo:3.6-jessie
+    ports:
+      - "27017:27017"
+    volumes:
+      - data:/data/db
+volumes:
+  cache:
+  data:
+secrets:
+  host_ssh_key:
+    file: ~/.ssh/id_rsa
