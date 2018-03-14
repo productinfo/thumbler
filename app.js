@@ -2,7 +2,6 @@
 // Sanity-check the conversion and remove this comment.
 /*
  * decaffeinate suggestions:
- * DS101: Remove unnecessary use of Array.from
  * DS102: Remove unnecessary code created because of implicit returns
  * DS104: Avoid inline assignments
  * DS204: Change includes calls to have a more natural evaluation order
@@ -56,7 +55,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(cors({
   origin(origin, cb) { let needle;
-  return cb(null, (needle = origin, Array.from(_.result(hooks, 'corsWhitelist', [])).includes(needle))); }
+  return cb(null, (needle = origin, _.result(hooks, 'corsWhitelist', [])).includes(needle)); }
 })
 );
 

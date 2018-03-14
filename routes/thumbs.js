@@ -2,7 +2,6 @@
 // Sanity-check the conversion and remove this comment.
 /*
  * decaffeinate suggestions:
- * DS101: Remove unnecessary use of Array.from
  * DS102: Remove unnecessary code created because of implicit returns
  * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
@@ -47,12 +46,12 @@ const editableFields = [
 
 const filterFields = function(data, fields) {
   const out = {};
-  for (let k of Array.from(fields)) {
+  for (let k of fields) {
     if ((data[k] == null)) { continue; }
     const parts = k.split('.');
     const lastPart = parts.pop();
     let o = out;
-    for (let part of Array.from(parts)) {
+    for (let part of parts) {
       if (o[part] == null) { o[part] = {}; }
       o = o[part];
     }
@@ -95,7 +94,7 @@ const createFilter = function({subjectFilter, agentFilter, dateFromFilter, dateT
 
   if (agentFilter) {
     // Enable comma-separated values + whitepsace ignoring
-    agentFilter = (Array.from(agentFilter.split(',')).map((i) => _.trim(i))).join("|");
+    agentFilter = agentFilter.split(',').map((i) => _.trim(i)).join("|");
     filter['agent.name'] = new RegExp(agentFilter, 'i');
   }
 
@@ -252,7 +251,7 @@ module.exports = function(debug) {
           if ((feedback != null ? feedback.length : undefined) > 80) {
             const words = feedback.replace(/\s+/g, ' ').split(' ');
             let truncated = "";
-            for (let w of Array.from(words)) { if (truncated.length < 70) { truncated += ` ${w}`; } }
+            for (let w of words) { if (truncated.length < 70) { truncated += ` ${w}`; } }
             feedback = truncated.substr(0, 80) + '...';
           }
           return feedback;
