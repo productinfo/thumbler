@@ -1,16 +1,15 @@
-const Q = require('q');
+const Q = require('q')
 
 module.exports = {
   connected: false,
   ifConnected() {
     return Q.Promise((resolve, reject, notify) => {
       if (this.connected) {
-        resolve();
+        resolve()
       } else {
-        console.log('A10, I am not connected');
-        reject();
+        console.log('A10, I am not connected')
+        reject()
       }
-    });
+    })
   }
-};
-
+}

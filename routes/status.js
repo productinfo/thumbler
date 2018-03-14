@@ -1,11 +1,20 @@
-const _        = require('lodash');
-const express  = require('express');
-const router   = express.Router();
-const Thumb    = require('../model/thumb');
-const dbState  = require('../util/db_state');
+const _ = require('lodash')
+const express = require('express')
+const router = express.Router()
+const Thumb = require('../model/thumb')
+const dbState = require('../util/db_state')
 
 module.exports = function(debug = false) {
   return router.get('/', (req, res) =>
-    dbState.ifConnected().then(() => Thumb.findOne({}, '_id').exec()).then(() => res.status(200).end()).catch(() => res.status(500).send("DB connection failed").end())
-  );
-};
+    dbState
+      .ifConnected()
+      .then(() => Thumb.findOne({}, '_id').exec())
+      .then(() => res.status(200).end())
+      .catch(() =>
+        res
+          .status(500)
+          .send('DB connection failed')
+          .end()
+      )
+  )
+}
