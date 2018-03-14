@@ -4,7 +4,6 @@
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
  * DS104: Avoid inline assignments
- * DS204: Change includes calls to have a more natural evaluation order
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 let dbUrl, hooks;
@@ -53,10 +52,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(cors({
-  origin(origin, cb) { let needle;
-  return cb(null, (needle = origin, _.result(hooks, 'corsWhitelist', [])).includes(needle)); }
-})
-);
+  origin: (origin, cb) => cb(null, _.result(hooks, 'corsWhitelist', []).indexOf(origin) > -1)
+}));
 
 app.get('/sanity', (req, res) => res.status(404).send("Sanity not found"));
 app.use("/status", statusRouter(app.get("env") === "development"));
