@@ -3,7 +3,6 @@
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
- * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 let hooks;
@@ -47,12 +46,12 @@ const editableFields = [
 const filterFields = function(data, fields) {
   const out = {};
   for (let k of fields) {
-    if ((data[k] == null)) { continue; }
+    if (!data[k]) { continue; }
     const parts = k.split('.');
     const lastPart = parts.pop();
     let o = out;
     for (let part of parts) {
-      if (o[part] == null) { o[part] = {}; }
+      o[part] = !!o[part] ? o[part] : {};
       o = o[part];
     }
     o[lastPart] = data[k];
@@ -154,9 +153,7 @@ const createFilter = function({subjectFilter, agentFilter, dateFromFilter, dateT
 
 const PER_PAGE = 100;
 
-module.exports = function(debug) {
-
-  if (debug == null) { debug = false; }
+module.exports = function(debug = false) {
   router.use('/list', paginate.middleware(PER_PAGE, PER_PAGE));
 
   router.get('/summary', function(req, res, next) {
@@ -248,7 +245,7 @@ module.exports = function(debug) {
           return moment(date).utc().format("DD/MM/YYYY HH:mm:ss");
         },
         truncateFeedback(feedback) {
-          if ((feedback != null ? feedback.length : undefined) > 80) {
+          if (feedback && feedback.length > 80) {
             const words = feedback.replace(/\s+/g, ' ').split(' ');
             let truncated = "";
             for (let w of words) { if (truncated.length < 70) { truncated += ` ${w}`; } }

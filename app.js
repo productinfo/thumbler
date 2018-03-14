@@ -5,7 +5,6 @@
  * DS102: Remove unnecessary code created because of implicit returns
  * DS104: Avoid inline assignments
  * DS204: Change includes calls to have a more natural evaluation order
- * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 let dbUrl, hooks;
@@ -107,8 +106,7 @@ try {
 
 module.exports = {
   app,
-  run(port) {
-    if (port == null) { port = 7501; }
+  run(port = 7501) {
     return Q()
     .then(function() {
       logging.log('Init #3: Running server');
