@@ -46,7 +46,7 @@ const filterFields = function(data, fields) {
     const lastPart = parts.pop()
     let o = out
     for (let part of parts) {
-      o[part] = !!o[part] ? o[part] : {}
+      o[part] = o[part] ? o[part] : {}
       o = o[part]
     }
     o[lastPart] = data[k]
