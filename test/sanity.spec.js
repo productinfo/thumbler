@@ -2,7 +2,7 @@
 // Sanity-check the conversion and remove this comment.
 /*
  * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
+
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 const chai = require('chai');
@@ -11,7 +11,7 @@ chai.should();
 const request = require('supertest');
 
 describe("Sanity", () =>
-  it("should be sane", function(done) {
+  it("should be sane", (done) => {
 
     expect(1).to.equal(1);
     (1).should.equal(1);

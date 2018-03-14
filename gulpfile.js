@@ -2,7 +2,6 @@
 // Sanity-check the conversion and remove this comment.
 /*
  * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 const gulp = require("gulp");
@@ -23,7 +22,6 @@ const { exec } = require("child_process");
 print = require('gulp-print');
 
 const cl = gutil.colors;
-
 
 // =====
 // Setup
@@ -75,25 +73,24 @@ const runTests = () =>
       ui: 'bdd',
       compilers: 'coffee:coffee-script/register',
       reporter: 'spec'
-    }))
-;
+    }));
 
 
-gulp.task('test', function() {
+gulp.task('test', () => {
   const logging = require('./util/logging.coffee');
   logging.setEnv();
   return runTests();
 });
 
 
-gulp.task('tdd', function(cb) {
+gulp.task('tdd', (cb) => {
   // Test-Driven development: watch and rerun tests upon file changes
   const logging = require('./util/logging.coffee');
   logging.setEnv();
   runTests()
-    .on("error", function() {});
+    .on("error", () => {});
   return gulp.watch((paths.app))
-    .on("change", file => runTests().on("error", function() {}));
+    .on("change", file => runTests().on("error", () => {}));
 });
 
 
@@ -112,7 +109,7 @@ gulp.task("serve", () =>
 );
 
 
-gulp.task("livereload", function() {
+gulp.task("livereload", () => {
 
   // Trigger browser refresh when smth changes in app/
   livereload.listen();
@@ -176,8 +173,7 @@ gulp.task("deploy", ['build'], function() {
   );
 });
 
-var bumpVersion = function(type) {
-  type = type || "patch";
+var bumpVersion = (type = 'patch') => {
   let version = "";
   return gulp.src([
     "./package.json"

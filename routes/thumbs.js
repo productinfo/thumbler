@@ -2,10 +2,8 @@
 // Sanity-check the conversion and remove this comment.
 /*
  * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-let hooks;
 const _        = require('lodash');
 const express  = require('express');
 const Q        = require('q');
@@ -25,6 +23,7 @@ moment.updateLocale('en', {
   }
 });
 
+let hooks;
 try {
   hooks = require('../local_config/hooks');
 } catch (e) {
@@ -73,13 +72,13 @@ const getThumb = function(data) {
 
 const getOrCreateThumb = function(data) {
   let thumbData = null;
-  return Q.Promise(function(resolve, reject) {
+  return Q.Promise((resolve, reject) => {
     thumbData = filterFields(data, editableFields);
     if (typeof hooks.validateThumb === 'function') {
       hooks.validateThumb(thumbData);
     }
     thumbData = (typeof hooks.preprocessThumb === 'function' ? hooks.preprocessThumb(thumbData, data) : undefined) || thumbData;
-    return resolve(Q(Thumb.create(thumbData)));}).catch(function(err) {
+    return resolve(Q(Thumb.create(thumbData)));}).catch((err) => {
     if ([11000, 11001].includes(err.code)) { // Duplicate thumb
       return getThumb(thumbData);
     } else {
@@ -156,7 +155,7 @@ const PER_PAGE = 100;
 module.exports = function(debug = false) {
   router.use('/list', paginate.middleware(PER_PAGE, PER_PAGE));
 
-  router.get('/summary', function(req, res, next) {
+  router.get('/summary', (req, res, next) => {
     const today = moment().utc().startOf('day').toDate();
     const yesterday = moment().utc().subtract(1, 'day').startOf('day').toDate();
     const { serviceId } = req.query;
@@ -165,7 +164,7 @@ module.exports = function(debug = false) {
       .exec((err, result) => res.json(result));
   });
 
-  router.get('/list', function(req, res, next) {
+  router.get('/list', (req, res, next) => {
 
     const page = Math.max(1, req.params.page || 1);
     const subjectFilter = req.params.subject || '';
@@ -256,17 +255,17 @@ module.exports = function(debug = false) {
       }));
 });
 
-  router.post('/', function(req, res, next) {
+  router.post('/', (req, res, next) => {
     const data = _.extend({}, req.body, {'user.ip': req.ip});
     return getOrCreateThumb(data)
     .then(function(thumb) {
       switch (accepts(req).type(['json', 'html'])) {
         case 'html':
-          return res.render('vote', {thumb});
+          res.render('vote', {thumb});
         case 'json':
-          return res.send({id: thumb.id});
+          res.send({id: thumb.id});
         default:
-          return res.status(200).end();
+          res.status(200).end();
       }}).catch(function(err) {
       if ([11000, 11001].includes(err.code)) {
         return res.status(400).render('error', {
@@ -280,17 +279,17 @@ module.exports = function(debug = false) {
     });
   });
 
-  router.get('/vote', function(req, res, next) {
+  router.get('/vote', (req, res, next) => {
     const data = _.extend({}, req.query, {'user.ip': req.ip});
     return getOrCreateThumb(data)
     .then(function(thumb) {
       switch (accepts(req).type(['json', 'html'])) {
         case 'html':
-          return res.render('vote', {thumb});
+          res.render('vote', {thumb});
         case 'json':
-          return res.send({id: thumb.id});
+          res.send({id: thumb.id});
         default:
-          return res.status(200).end();
+          res.status(200).end();
       }}).catch(function(err) {
       if (err.name === "ValidationError") {
         return res.status(400).render('error', {error: err});
@@ -300,18 +299,18 @@ module.exports = function(debug = false) {
     });
   });
 
-  router.post('/feedback', function(req, res, next) {
+  router.post('/feedback', (req, res, next) => {
 
     const feedback = (req.body.feedback || "").trim();
 
-    const sendResponse = function() {
+    const sendResponse = () => {
       switch (accepts(req).type(['json', 'html'])) {
         case 'html':
-          return res.render('thankyou');
+          res.render('thankyou');
         case 'json':
-          return res.send({id: req.body.id});
+          res.send({id: req.body.id});
         default:
-          return res.status(200).end();
+          res.status(200).end();
       }
     };
 
@@ -327,7 +326,7 @@ module.exports = function(debug = false) {
     }
   });
 
-  return router.post('/handle', function(req, res, next) {
+  return router.post('/handle', (req, res, next) => {
     const handled = req.body.handled === '1';
 
     const sendResponse = () => res.status(200).end();

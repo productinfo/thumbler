@@ -2,7 +2,6 @@
 // Sanity-check the conversion and remove this comment.
 /*
  * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 const process = require('process');
@@ -60,10 +59,10 @@ app.use("/status", statusRouter(app.get("env") === "development"));
 app.use("/thumbs", thumbsRouter(app.get("env") === "development"));
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
   const err = new Error("Not Found");
   err.status = 404;
-  return next(err);
+  next(err);
 });
 
 // error handlers
@@ -72,26 +71,26 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get("env") === "development") {
-  app.use(function(err, req, res, next) {
+  app.use((err, req, res, next) => {
     logging.error(err.stack);
     res.status(err.status || 500);
-    return res.render("error", {
+    res.render("error", {
       message: err.message,
       error: err
-    }
-    );
+    });
   });
 }
 
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
+app.use((err, req, res, next) => {
   res.status(err.status || 500);
-  return res.render("error", {
+  res.render("error", {
     message: err.message,
     error: {}
-  });});
+  });
+});
 
 let dbUrl;
 try {

@@ -2,7 +2,6 @@
 // Sanity-check the conversion and remove this comment.
 /*
  * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 const process = require('process');
@@ -16,7 +15,7 @@ module.exports = {
       const debugFlag = _.find(process.argv, i => i.match(/^--debug/));
       if (debugFlag) {
         const namespaces = debugFlag.split('=')[1];
-        return process.env.DEBUG = namespaces || '*';
+        process.env.DEBUG = namespaces || '*';
       }
     }
   },
@@ -38,6 +37,6 @@ module.exports = {
     this.log('  Rainbow  !');
     this.info(' Rainbow  !');
     this.warn(' Rainbow  !');
-    return this.error('Restarting');
+    this.error('Restarting');
   }
 };
