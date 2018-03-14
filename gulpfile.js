@@ -21,7 +21,7 @@ const cl = gutil.colors;
 // Setup
 // =====
 const paths = {
-  appRoot: "app.coffee",
+  appRoot: "app.js",
   app: [
     // For some reason, watching a blacklist-style array errors with max call stack size exceeded
     "model/**",
@@ -30,7 +30,7 @@ const paths = {
     "test/**",
     "util/**",
     "views/**",
-    "app.coffee",
+    "app.js",
     "README.md",
     "LICENSE",
     "package.json",
@@ -38,8 +38,8 @@ const paths = {
     "local_config/package.json"
   ],
   tests: [ // We can specify some ordering here
-    'test/sanity.spec.coffee',
-    'test/**/*.coffee'
+    'test/sanity.spec.js',
+    'test/**/*.js'
   ],
   build: "dist/"
 };
@@ -71,7 +71,7 @@ const runTests = () =>
 
 
 gulp.task('test', () => {
-  const logging = require('./util/logging.coffee');
+  const logging = require('./util/logging');
   logging.setEnv();
   return runTests();
 });
@@ -79,7 +79,7 @@ gulp.task('test', () => {
 
 gulp.task('tdd', (cb) => {
   // Test-Driven development: watch and rerun tests upon file changes
-  const logging = require('./util/logging.coffee');
+  const logging = require('./util/logging');
   logging.setEnv();
   runTests()
     .on("error", () => {});
@@ -93,7 +93,7 @@ gulp.task("serve", () =>
   supervisor(paths.appRoot, {
     args: process.argv.slice(2),
     watch: ".",
-    extensions: ["coffee"],
+    extensions: ["js", "coffee"],
     ignore: [],
     debug: false,
     debugBrk: false,

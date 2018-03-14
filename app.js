@@ -18,7 +18,7 @@ const Q = require('q');
 const cons = require('consolidate');
 const eco = require('eco');
 const mongoose = require('mongoose');
-const dbState = require('./util/db_state.coffee');
+const dbState = require('./util/db_state');
 
 let hooks;
 try {

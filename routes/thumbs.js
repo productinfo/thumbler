@@ -4,7 +4,7 @@ const Q        = require('q');
 const paginate = require('express-paginate');
 const accepts  = require('accepts');
 const router   = express.Router();
-const Thumb    = require('../model/thumb.coffee');
+const Thumb    = require('../model/thumb');
 const moment   = require('moment');
 
 // from moment docs:
