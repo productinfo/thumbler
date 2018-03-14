@@ -14,3 +14,4 @@ db_config.json
 local_config
 /data
 /.vscode
+*.log
