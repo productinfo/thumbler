@@ -1,31 +1,41 @@
-process = require('process')
-_ = require('lodash')
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+const process = require('process');
+const _ = require('lodash');
 
-module.exports =
+module.exports = {
 
-  setEnv: ->
-    # if no DEBUG, try to parse it from --debug=... argument
-    if not process.env.DEBUG
-      debugFlag = _.find(process.argv, (i) -> i.match(/^--debug/))
-      if debugFlag
-        namespaces = debugFlag.split('=')[1]
-        process.env.DEBUG = namespaces or '*'
+  setEnv() {
+    // if no DEBUG, try to parse it from --debug=... argument
+    if (!process.env.DEBUG) {
+      const debugFlag = _.find(process.argv, i => i.match(/^--debug/));
+      if (debugFlag) {
+        const namespaces = debugFlag.split('=')[1];
+        return process.env.DEBUG = namespaces || '*';
+      }
+    }
+  },
 
-  initialize: ->
+  initialize() {
 
-    @setEnv()
+    this.setEnv();
 
-    debug = require('debug')
-    debug.colors = [2, 6, 3, 1, 5, 4]
+    const debug = require('debug');
+    debug.colors = [2, 6, 3, 1, 5, 4];
 
-    @log = debug('thumbler:log')
-    @info = debug('thumbler:info')
-    @warn = debug('thumbler:warn')
-    @warn.log = console.warn.bind(console)
-    @error = debug('thumbler:error')
-    @error.log = console.error.bind(console)
+    this.log = debug('thumbler:log');
+    this.info = debug('thumbler:info');
+    this.warn = debug('thumbler:warn');
+    this.warn.log = console.warn.bind(console);
+    this.error = debug('thumbler:error');
+    this.error.log = console.error.bind(console);
 
-    @log('  Rainbow  !')
-    @info(' Rainbow  !')
-    @warn(' Rainbow  !')
-    @error('Restarting')
+    this.log('  Rainbow  !');
+    this.info(' Rainbow  !');
+    this.warn(' Rainbow  !');
+    return this.error('Restarting');
+  }
+};

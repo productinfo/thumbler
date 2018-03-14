@@ -1,40 +1,41 @@
-mongoose = require('mongoose')
-paginate = require('mongoose-paginate')
+let Thumb;
+const mongoose = require('mongoose');
+const paginate = require('mongoose-paginate');
 
-ThumbSchema = new mongoose.Schema {
-  rating:    {type: Number, required: true}
-  serviceId: {type: String, required: true}
-  subjectId: {type: String, required: true}
-  uniqueId:  {type: String, unique: true, sparse: true}
-  feedback:  {type: String}
-  handled:   {type: Boolean, required: false}
+const ThumbSchema = new mongoose.Schema({
+  rating:    {type: Number, required: true},
+  serviceId: {type: String, required: true},
+  subjectId: {type: String, required: true},
+  uniqueId:  {type: String, unique: true, sparse: true},
+  feedback:  {type: String},
+  handled:   {type: Boolean, required: false},
   user: {
-    name: String
-    email: String
-    company: String
+    name: String,
+    email: String,
+    company: String,
     ip: {type: String}
-  }
+  },
   agent: {
     name: String
-  }
+  },
   createdAt: {type: Date, default: Date.now}
-}
+});
 
-ThumbSchema.plugin paginate
+ThumbSchema.plugin(paginate);
 
-###
+/*
 Returns summary of positive/negative thumbs for a particular service, grouped by agent.
 @param {string} serviceId Service ID to match
 @param  {Date} from Datetime from
 @param  {Date} to   Datetime to (exclusive)
 @return {mongoose.Aggregate} Aggregate object you can call exec() on
-###
-ThumbSchema.statics.getServiceSummary = (serviceId, from, to) ->
-  # If you want to put this into CLI, see QUERIES.md for copy-paste
+*/
+ThumbSchema.statics.getServiceSummary = function(serviceId, from, to) {
+  // If you want to put this into CLI, see QUERIES.md for copy-paste
   return this.aggregate({
     $match: {
       createdAt: { $gte : from, $lt: to},
-      serviceId: serviceId,
+      serviceId,
       uniqueId: { $regex: /^[^_]+$/ }
     }
   },
@@ -51,6 +52,7 @@ ThumbSchema.statics.getServiceSummary = (serviceId, from, to) ->
       positive: {$sum: '$positive'},
       negative: {$sum: '$negative'}
     }
-  })
+  });
+};
 
-module.exports = Thumb = mongoose.model('Thumb', ThumbSchema)
+module.exports = (Thumb = mongoose.model('Thumb', ThumbSchema));

@@ -1,12 +1,21 @@
-Q = require('q')
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+const Q = require('q');
 
-module.exports =
-  connected: false
-  ifConnected: ->
-    Q.Promise (resolve, reject, notify) =>
-      if @connected
-        resolve()
-      else
-        console.log('A10, I am not connected')
-        reject()
+module.exports = {
+  connected: false,
+  ifConnected() {
+    return Q.Promise((resolve, reject, notify) => {
+      if (this.connected) {
+        return resolve();
+      } else {
+        console.log('A10, I am not connected');
+        return reject();
+      }
+    });
+  }
+};
 

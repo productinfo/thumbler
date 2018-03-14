@@ -1,43 +1,52 @@
-chai = require('chai')
-expect = chai.expect
-chai.should()
-request = require('supertest')
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+const chai = require('chai');
+const { expect } = chai;
+chai.should();
+const request = require('supertest');
 
-describe "Thumbs", ->
-  it "should create a new thumb", (done) ->
+describe("Thumbs", function() {
+  it("should create a new thumb", done =>
 
     request(app)
       .post('/thumbs')
-      .send {
-        rating: 1
-        serviceId: "test"
+      .send({
+        rating: 1,
+        serviceId: "test",
         subjectId: "test_001"
-      }
+      })
       .expect(200)
       .end(done)
+  );
 
-  it "should honour uniqueId", (done) ->
+  return it("should honour uniqueId", function(done) {
 
-    uniqueId = "test_#{Math.floor(Math.random()*99999999)}"
+    const uniqueId = `test_${Math.floor(Math.random()*99999999)}`;
 
-    request(app)
+    return request(app)
       .post('/thumbs')
-      .send {
-        rating: -1
-        serviceId: "test"
-        subjectId: "test_001"
-        uniqueId: uniqueId
-      }
+      .send({
+        rating: -1,
+        serviceId: "test",
+        subjectId: "test_001",
+        uniqueId
+      })
       .expect(200)
-      .end (err, res) ->
-        done(err, res) if err
-        request(app)
+      .end(function(err, res) {
+        if (err) { done(err, res); }
+        return request(app)
           .post('/thumbs')
-          .send {
-            rating: -1
-            serviceId: "test"
-            subjectId: "test_001"
-            uniqueId: uniqueId
-          }
+          .send({
+            rating: -1,
+            serviceId: "test",
+            subjectId: "test_001",
+            uniqueId
+          })
           .expect(400, "Duplicate thumb")
-          .end(done)
+          .end(done);
+    });
+  });
+});
