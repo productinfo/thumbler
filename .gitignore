@@ -6,3 +6,5 @@ local_config/
 
 yarn-error.log
 npm-debug*.log
+
+db_config.json
