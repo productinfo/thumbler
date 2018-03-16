@@ -39,8 +39,8 @@ const paths = {
   ],
   tests: [
     // We can specify some ordering here
-    'test/sanity.spec.js',
-    'test/**/*.js'
+    'tests/app.test.js',
+    'tests/**/*.js'
   ],
   build: 'dist/'
 }
@@ -58,31 +58,6 @@ const env = gutil.env.e || 'development'
 // =====
 // Tasks
 // =====
-
-const runTests = () =>
-  gulp.src(paths.tests, { read: false }).pipe(
-    mocha({
-      ui: 'bdd',
-      compilers: 'coffee:coffee-script/register',
-      reporter: 'spec'
-    })
-  )
-
-gulp.task('test', () => {
-  const logging = require('./util/logging')
-  logging.setEnv()
-  return runTests()
-})
-
-gulp.task('tdd', cb => {
-  // Test-Driven development: watch and rerun tests upon file changes
-  const logging = require('./util/logging')
-  logging.setEnv()
-  runTests().on('error', () => {})
-  return gulp
-    .watch(paths.app)
-    .on('change', file => runTests().on('error', () => {}))
-})
 
 gulp.task('serve', () =>
   // Run server and watch for changes
