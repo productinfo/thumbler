@@ -2,9 +2,13 @@
   "name": "thumbler",
   "version": "0.3.4",
   "private": true,
+  "engines": {
+    "node": ">=8.10.0 <=9.8.0"
+  },
   "scripts": {
     "precommit": "lint-staged",
     "start": "node ./bin/www",
+    "test": "jest",
     "format": "prettier-eslint \"**/*.js\" --write"
   },
   "eslintConfig": {
@@ -52,6 +56,7 @@
     "gulp-util": "~3.0.8",
     "husky": "^0.14.3",
     "istanbul": "^0.4.3",
+    "jest": "^22.4.2",
     "lint-staged": "^7.0.0",
     "methods": "~1.1.0",
     "mocha": "~4.1.0",

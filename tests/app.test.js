@@ -1,11 +1,25 @@
-const chai = require('chai')
-const { expect } = chai
-chai.should()
+const process = require('process')
 const request = require('supertest')
 
+beforeAll(() => {
+  process.env.DEBUG = 'thumbler:*'
+  const thumbler = require('../app')
+  global.app = thumbler.app
+  return thumbler.run()
+})
+
+describe('Sanity', () => {
+  test('should be sane', async (done) => {
+    const response = await request(global.app).get('/sanity')
+    expect(response.status).toBe(404)
+    expect(response.text).toBe('Sanity not found')
+    done()
+  })
+})
+
 describe('Thumbs', () => {
-  it('should create a new thumb', done =>
-    request(app)
+  test('should create a new thumb', done =>
+    request(global.app)
       .post('/thumbs')
       .send({
         rating: 1,
@@ -15,10 +29,10 @@ describe('Thumbs', () => {
       .expect(200)
       .end(done))
 
-  it('should honour uniqueId', done => {
+  test('should honour uniqueId', done => {
     const uniqueId = `test_${Math.floor(Math.random() * 99999999)}`
 
-    return request(app)
+    return request(global.app)
       .post('/thumbs')
       .send({
         rating: -1,
@@ -31,7 +45,7 @@ describe('Thumbs', () => {
         if (err) {
           done(err, res)
         }
-        return request(app)
+        return request(global.app)
           .post('/thumbs')
           .send({
             rating: -1,
