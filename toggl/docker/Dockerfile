@@ -6,8 +6,9 @@ ENV PATH $PATH:/workspace/node_modules/.bin
 WORKDIR /workspace
 
 RUN \
-apk --update add dumb-init git openssh make gcc g++ python && \
-rm -rf /var/lib/apt/lists/* && \
-rm /var/cache/apk/*
+apk --no-cache add dumb-init vim tmux git openssh make gcc g++ python
+
+#COPY ./yarnrc /usr/local/share/.yarnrc
+COPY ./authorize.sh /usr/local/bin/ssh-auth
 
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]

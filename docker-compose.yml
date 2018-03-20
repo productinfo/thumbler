@@ -1,25 +1,33 @@
 version: '3.4'
+x-thumbler: &thumbler
+  environment:
+    DB_URL: mongodb://mongodb/thumbler
+  working_dir: /thumbler
+  ports:
+    - "7501:7501"
+x-node: &node
+  secrets:
+    - id_rsa
+  volumes:
+    - type: bind
+      source: .
+      target: /thumbler
+    - node_modules:/node_modules
+    - cache:/usr/local/share/.cache
+  dns:
+    - 8.8.8.8
+    - 8.8.4.4
+x-from-latest: &from-latest
+  image: thumbler:latest
+
 services:
   thumbler:
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-    dns:
-      - 8.8.8.8
-      - 8.8.4.4
-    image: node:8.10.0-alpine
-    working_dir: /thumbler
-    environment:
-      DB_URL: mongodb://mongodb/thumbler
+    << : [*node, *thumbler]
+    build: ./packages/docker
     command: yarn start
-    ports:
-      - "7501:7501"
-    volumes:
-      - type: bind
-        source: .
-        target: /thumbler
-    secrets:
-      - host_ssh_key
+  shell:
+    << : [*node, *thumbler, *from-latest]
+    command: /bin/sh
   mongodb:
     image: mongo:3.6-jessie
     ports:
@@ -28,7 +36,8 @@ services:
       - data:/data/db
 volumes:
   cache:
+  node_modules:
   data:
 secrets:
-  host_ssh_key:
+  id_rsa:
     file: ~/.ssh/id_rsa
