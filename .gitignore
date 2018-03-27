@@ -10,3 +10,7 @@ npm-debug*.log
 db_config.json
 
 dist
+
+# bundled server
+build
+
