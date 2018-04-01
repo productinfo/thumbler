@@ -151,8 +151,3 @@ module.exports = {
       .fail(error => logging.error('app run error:', error))
   }
 }
-
-if (!module.parent) {
-  let q = Q()
-  q = q.then(() => module.exports.run())
-}
