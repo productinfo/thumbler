@@ -12,26 +12,21 @@
     "start-dev": "node bin/www",
     "format": "prettier-eslint \"**/*.js\" --write",
     "dev": "webpack -w",
-    "build": "webpack"
+    "build": "webpack",
+    "deploy": "node scripts/deploy"
   },
   "eslintConfig": {
     "extends": "toggl"
   },
-  "eslintIgnore": [
-    "/public/**"
-  ],
+  "eslintIgnore": ["/public/**"],
   "lint-staged": {
-    "*.{js,json,css,md}": [
-      "prettier-eslint --write",
-      "git add"
-    ]
+    "*.{js,json,css,md}": ["prettier-eslint --write", "git add"]
   },
-  "workspaces": [
-    "toggl/*"
-  ],
+  "workspaces": ["toggl/*"],
   "dependencies": {
     "accepts": "^1.3.0",
     "body-parser": "~1.18.2",
+    "chalk": "^2.3.2",
     "coffeescript": "~2.1.1",
     "compression": "~1.7.1",
     "consolidate": "~0.15.0",
@@ -42,6 +37,7 @@
     "express": "~4.16.2",
     "express-paginate": "0.3.0",
     "lodash": "^4.3.0",
+    "minimist": "^1.2.0",
     "moment": "^2.10.6",
     "mongoose": "~4.13.9",
     "mongoose-paginate": "5.0.3",
@@ -55,6 +51,7 @@
     "chai": "~4.1.2",
     "chai-as-promised": "~7.1.1",
     "clean-webpack-plugin": "^0.1.19",
+    "copy-webpack-plugin": "^4.5.1",
     "eslint": "^4.18.2",
     "gulp": "~3.9.1",
     "gulp-bump": "~3.0.0",
