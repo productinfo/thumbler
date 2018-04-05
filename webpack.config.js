@@ -1,5 +1,7 @@
 const { join } = require('path')
+const webpack = require('webpack')
 const nodeExternals = require('webpack-node-externals')
+const WebpackShellPlugin = require('webpack-shell-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 
@@ -18,8 +20,8 @@ module.exports = {
   externals: nodeExternals(),
   entry: join(__dirname, 'bin', 'www'),
   output: {
-    path: outPath,
-    filename: 'app.js'
+    path: outDir('bin'),
+    filename: 'www'
   },
   resolve: {
     extensions: ['.web.js', '.mjs', '.js', '.json']
@@ -29,6 +31,13 @@ module.exports = {
     new CopyWebpackPlugin([
       { from: dir('public'), to: outDir('public') },
       { from: dir('views'), to: outDir('views') }
-    ])
+    ]),
+    new webpack.BannerPlugin({ banner: '#!/usr/bin/env node', raw: true }),
+    new WebpackShellPlugin({
+      onBuildEnd: [
+        'yarn ncp node_modules build/node_modules',
+        'chmod +x build/bin/www'
+      ]
+    })
   ]
 }
