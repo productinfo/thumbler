@@ -8,6 +8,7 @@
   "scripts": {
     "precommit": "lint-staged",
     "prestart": "yarn build",
+    "predeploy": "yarn build",
     "start": "node ./build/app",
     "start-dev": "node bin/www",
     "format": "prettier-eslint \"**/*.js\" --write",
