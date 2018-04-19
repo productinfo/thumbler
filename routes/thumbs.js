@@ -1,6 +1,5 @@
 const _ = require('lodash')
 const express = require('express')
-const Q = require('q')
 const paginate = require('express-paginate')
 const accepts = require('accepts')
 const router = express.Router()
@@ -63,12 +62,12 @@ const getThumb = function (data) {
     where.subjectId = data.subjectId
     where.rating = +data.rating
   }
-  return Q(Thumb.findOne(where).exec())
+  return Thumb.findOne(where).exec()
 }
 
 const getOrCreateThumb = function (data) {
   let thumbData = null
-  return Q.Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     thumbData = filterFields(data, editableFields)
     if (typeof hooks.validateThumb === 'function') {
       hooks.validateThumb(thumbData)
@@ -77,7 +76,7 @@ const getOrCreateThumb = function (data) {
       (typeof hooks.preprocessThumb === 'function'
         ? hooks.preprocessThumb(thumbData, data)
         : undefined) || thumbData
-    return resolve(Q(Thumb.create(thumbData)))
+    return resolve(Thumb.create(thumbData))
   }).catch(err => {
     if ([11000, 11001].includes(err.code)) {
       // Duplicate thumb
@@ -202,39 +201,42 @@ module.exports = function (debug = false) {
       notHandledFilter
     })
 
-    const defList = Q.defer()
-    Thumb.paginate(
-      filter,
-      { page, limit: PER_PAGE },
-      function (err, result) {
+    const defList = new Promise(resolve => {
+      Thumb.paginate(
+        filter,
+        { page, limit: PER_PAGE },
+        function (err, result) {
+          if (err) {
+            return next(err)
+          }
+          return resolve({
+            pages: result.pages,
+            thumbs: result.docs,
+            count: result.total
+          })
+        },
+        { sortBy: { createdAt: -1 } }
+      )
+    })
+
+    const defCountPos = new Promise(resolve => {
+      let f = _.extend({ rating: { $gt: 0 } }, filter)
+      Thumb.count(f).exec(function (err, count) {
         if (err) {
           return next(err)
         }
-        return defList.resolve({
-          pages: result.pages,
-          thumbs: result.docs,
-          count: result.total
-        })
-      },
-      { sortBy: { createdAt: -1 } }
-    )
-
-    const defCountPos = Q.defer()
-    let f = _.extend({ rating: { $gt: 0 } }, filter)
-    Thumb.count(f).exec(function (err, count) {
-      if (err) {
-        return next(err)
-      }
-      return defCountPos.resolve(count)
+        return resolve(count)
+      })
     })
 
-    const defCountNeg = Q.defer()
-    f = _.extend({ rating: { $lt: 0 } }, filter)
-    Thumb.count(f).exec(function (err, count) {
-      if (err) {
-        return next(err)
-      }
-      return defCountNeg.resolve(count)
+    const defCountNeg = new Promise(resolve => {
+      f = _.extend({ rating: { $lt: 0 } }, filter)
+      Thumb.count(f).exec(function (err, count) {
+        if (err) {
+          return next(err)
+        }
+        return resolve(count)
+      })
     })
 
     const lastWeekStart = moment()
@@ -248,46 +250,48 @@ module.exports = function (debug = false) {
       .endOf('week')
       .toDate()
 
-    const defCountPosWeek = Q.defer()
-    f = _.extend({}, filter, {
-      rating: { $gt: 0 },
-      createdAt: { $lte: lastWeekEnd, $gte: lastWeekStart }
-    })
-    Thumb.count(f).exec(function (err, count) {
-      if (err) {
-        return next(err)
-      }
-      return defCountPosWeek.resolve(count)
+    const defCountPosWeek = new Promise(resolve => {
+      f = _.extend({}, filter, {
+        rating: { $gt: 0 },
+        createdAt: { $lte: lastWeekEnd, $gte: lastWeekStart }
+      })
+      Thumb.count(f).exec(function (err, count) {
+        if (err) {
+          return next(err)
+        }
+        return resolve(count)
+      })
     })
 
-    const defCountNegWeek = Q.defer()
-    f = _.extend({}, filter, {
-      rating: { $lt: 0 },
-      createdAt: { $lte: lastWeekEnd, $gte: lastWeekStart }
-    })
-    Thumb.count(f).exec(function (err, count) {
-      if (err) {
-        return next(err)
-      }
-      return defCountNegWeek.resolve(count)
+    const defCountNegWeek = new Promise(resolve => {
+      f = _.extend({}, filter, {
+        rating: { $lt: 0 },
+        createdAt: { $lte: lastWeekEnd, $gte: lastWeekStart }
+      })
+      Thumb.count(f).exec(function (err, count) {
+        if (err) {
+          return next(err)
+        }
+        return resolve(count)
+      })
     })
 
     const promises = [
-      defList.promise,
-      defCountPos.promise,
-      defCountNeg.promise,
-      defCountPosWeek.promise,
-      defCountNegWeek.promise
+      defList,
+      defCountPos,
+      defCountNeg,
+      defCountPosWeek,
+      defCountNegWeek
     ]
 
-    return Q.all(promises).spread(
-      (
+    return Promise.all(promises).then(
+      ([
         { pages, thumbs, countAll },
         countPos,
         countNeg,
         countPosWeek,
         countNegWeek
-      ) =>
+      ]) =>
         res.render('index', {
           thumbs,
           countAll,
@@ -399,14 +403,15 @@ module.exports = function (debug = false) {
       sendResponse()
     }
 
-    Q(Thumb.update({ _id: req.body.id }, { feedback }).exec())
+    Thumb.update({ _id: req.body.id }, { feedback })
+      .exec()
       .then(sendResponse)
       .catch(next)
 
     if (hooks.feedbackSaved) {
-      return Q(Thumb.findOne({ _id: req.body.id }).exec()).then(
-        hooks.feedbackSaved
-      )
+      return Thumb.findOne({ _id: req.body.id })
+        .exec()
+        .then(hooks.feedbackSaved)
     }
   })
 
@@ -415,7 +420,8 @@ module.exports = function (debug = false) {
 
     const sendResponse = () => res.status(200).end()
 
-    return Q(Thumb.update({ _id: req.body.id }, { handled }).exec())
+    return Thumb.update({ _id: req.body.id }, { handled })
+      .exec()
       .then(sendResponse)
       .catch(next)
   })

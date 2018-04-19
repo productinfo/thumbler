@@ -10,6 +10,7 @@ module.exports = {
   },
   rules: {
     // Built-in ESLint rules
-    'no-mixed-operators': 'off'
+    'no-mixed-operators': 'off',
+    'promise/avoid-new': 'off'
   }
 }

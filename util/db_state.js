@@ -1,13 +1,12 @@
-const Q = require('q')
-
 module.exports = {
   connected: false,
   ifConnected () {
-    return Q.Promise((resolve, reject, notify) => {
+    return new Promise((resolve, reject) => {
       if (this.connected) {
         resolve()
       } else {
         console.log('A10, I am not connected')
+        // eslint-disable-next-line prefer-promise-reject-errors
         reject()
       }
     })

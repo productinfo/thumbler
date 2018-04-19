@@ -14,7 +14,6 @@ const bodyParser = require('body-parser')
 const thumbsRouter = require('./routes/thumbs')
 const statusRouter = require('./routes/status')
 const compression = require('compression')
-const Q = require('q')
 const cons = require('consolidate')
 const eco = require('eco')
 const mongoose = require('mongoose')
@@ -102,57 +101,56 @@ try {
 module.exports = {
   app,
   run (port = 7501) {
-    return Q()
-      .then(function () {
-        logging.log('Init #3: Running server')
-        app.set('port', port)
-        // Run server
-        var runServer = function () {
-          mongoose.Promise = Q.Promise
-          return mongoose.connect(
-            dbUrl,
-            { useMongoClient: true, autoReconnect: true, keepAlive: 1 },
-            function (err) {
-              let server
-              if (err) {
-                logging.error('DB connection error', err)
-                logging.error('Trying again in 5s!')
-                setTimeout(runServer, 5000)
-                return
-              }
-
-              dbState.connected = true
-
-              mongoose.connection.on('error', function (err) {
-                logging.error('DB connection error', err)
-                return (dbState.connected = false)
-              })
-
-              mongoose.connection.on('disconnected', function (err) {
-                logging.error('DB connection dropped', err)
-                return (dbState.connected = false)
-              })
-
-              mongoose.connection.on('connected', function () {
-                logging.info('DB reconnected')
-                return (dbState.connected = true)
-              })
-
-              return (server = app.listen(app.get('port'), () =>
-                logging.info(
-                  `Thumbler server listening on port ${server.address().port}`
-                )
-              ))
+    return new Promise(function (resolve) {
+      logging.log('Init #3: Running server')
+      app.set('port', port)
+      // Run server
+      var runServer = function () {
+        mongoose.Promise = Promise
+        return mongoose.connect(
+          dbUrl,
+          { useMongoClient: true, autoReconnect: true, keepAlive: 1 },
+          function (err) {
+            let server
+            if (err) {
+              logging.error('DB connection error', err)
+              logging.error('Trying again in 5s!')
+              setTimeout(runServer, 5000)
+              return
             }
-          )
-        }
-        return runServer()
-      })
-      .fail(error => logging.error('app run error:', error))
+
+            dbState.connected = true
+
+            mongoose.connection.on('error', function (err) {
+              logging.error('DB connection error', err)
+              return (dbState.connected = false)
+            })
+
+            mongoose.connection.on('disconnected', function (err) {
+              logging.error('DB connection dropped', err)
+              return (dbState.connected = false)
+            })
+
+            mongoose.connection.on('connected', function () {
+              logging.info('DB reconnected')
+              return (dbState.connected = true)
+            })
+
+            return (server = app.listen(app.get('port'), () =>
+              logging.info(
+                `Thumbler server listening on port ${server.address().port}`
+              )
+            ))
+          }
+        )
+      }
+      return runServer()
+    }).catch(error => logging.error('app run error:', error))
   }
 }
 
 if (!module.parent) {
-  let q = Q()
-  q = q.then(() => module.exports.run())
+  new Promise(resolve => resolve(module.exports.run())).catch(err =>
+    console.log(err)
+  )
 }
