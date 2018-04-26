@@ -183,7 +183,7 @@ gulp.task('deploy', ['build'], function () {
           ` \"cd ${
             targetConfig.root
           }; mkdir -p current; rm -rf previous; cp -r current previous\"`,
-        `rsync -e 'ssh -p ${
+        `rsync -K -e 'ssh -p ${
           targetConfig.port
         }' --checksum --archive --compress --delete --safe-links dist/ ${(targetConfig.user &&
           targetConfig.user + '@') ||
