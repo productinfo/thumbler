@@ -29,6 +29,7 @@ const paths = {
     'test/**',
     'util/**',
     'views/**',
+    '.nvmrc',
     'app.js',
     'README.md',
     'LICENSE',
