@@ -110,19 +110,24 @@ gulp.task('clean', done => {
   done()
 })
 
-gulp.task('build', gulp.series('clean', () =>
-  gulp.src(
-    paths.app.concat([
-      'node_modules/**',
-      'local_config/node_modules/**',
-      'bin/**',
-      'gulpfile*'
-    ]),
-    { base: './', follow: true }
-  ).pipe(gulp.dest(paths.build))
-))
+gulp.task(
+  'build',
+  gulp.series('clean', () =>
+    gulp
+      .src(
+        paths.app.concat([
+          'node_modules/**',
+          'local_config/node_modules/**',
+          'bin/**',
+          'gulpfile*'
+        ]),
+        { base: './', follow: true }
+      )
+      .pipe(gulp.dest(paths.build))
+  )
+)
 
-gulp.task('deploy', gulp.series('build', function () {
+gulp.task('deploy', () => {
   if (!deployConfig) {
     gutil.log(
       cl.red('Error: You need a deploy_config.json to be able to deploy')
@@ -203,7 +208,7 @@ gulp.task('deploy', gulp.series('build', function () {
         )
       })
     )
-}))
+})
 
 var bumpVersion = (type = 'patch') => {
   let version = ''

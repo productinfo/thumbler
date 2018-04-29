@@ -8,7 +8,10 @@
   "scripts": {
     "precommit": "lint-staged",
     "start": "node ./bin/www",
-    "format": "prettier-eslint \"**/*.js\" --write"
+    "format": "prettier-eslint \"**/*.js\" --write",
+    "build": "gulp build",
+    "predeploy": "yarn build",
+    "deploy": "gulp deploy"
   },
   "eslintConfig": {
     "extends": "toggl"
