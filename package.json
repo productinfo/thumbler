@@ -9,9 +9,9 @@
     "precommit": "lint-staged",
     "start": "node ./bin/www",
     "format": "prettier-eslint \"**/*.js\" --write",
-    "build": "gulp build",
+    "build": "node scripts/build",
     "predeploy": "yarn build",
-    "deploy": "gulp deploy"
+    "deploy": "node scripts/deploy"
   },
   "eslintConfig": {
     "extends": "toggl"
@@ -34,6 +34,7 @@
     "express": "~4.16.2",
     "express-paginate": "0.3.0",
     "lodash": "^4.3.0",
+    "minimist": "^1.2.0",
     "moment": "^2.10.6",
     "mongoose": "~4.13.9",
     "mongoose-paginate": "5.0.3",
