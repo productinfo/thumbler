@@ -105,23 +105,24 @@ gulp.task('livereload', () => {
     .on('change', file => setTimeout(() => livereload.changed(file.path), 500))
 })
 
-gulp.task('build', ['clean'], () =>
-  gulp
-    .src(
-      paths.app.concat([
-        'node_modules/**',
-        'local_config/node_modules/**',
-        'bin/**',
-        'gulpfile*'
-      ]),
-      { base: './' }
-    )
-    .pipe(gulp.dest(paths.build))
-)
+gulp.task('clean', done => {
+  exec(`rm -rf ${paths.build}`)
+  done()
+})
 
-gulp.task('clean', cb => exec(`rm -rf ${paths.build}`, () => cb()))
+gulp.task('build', gulp.series('clean', () =>
+  gulp.src(
+    paths.app.concat([
+      'node_modules/**',
+      'local_config/node_modules/**',
+      'bin/**',
+      'gulpfile*'
+    ]),
+    { base: './', follow: true }
+  ).pipe(gulp.dest(paths.build))
+))
 
-gulp.task('deploy', ['build'], function () {
+gulp.task('deploy', gulp.series('build', function () {
   if (!deployConfig) {
     gutil.log(
       cl.red('Error: You need a deploy_config.json to be able to deploy')
@@ -176,16 +177,16 @@ gulp.task('deploy', ['build'], function () {
   } -p ${targetConfig.port}`
 
   return gulp
-    .src('')
+    .src(__dirname)
     .pipe(
       shell([
         sshCmd +
           ` \"cd ${
             targetConfig.root
           }; mkdir -p current; rm -rf previous; cp -r current previous\"`,
-        `rsync -K -e 'ssh -p ${
+        `rsync -e 'ssh -p ${
           targetConfig.port
-        }' --checksum --archive --compress --delete --safe-links dist/ ${(targetConfig.user &&
+        }' --checksum --archive --compress --delete --keep-dirlinks --safe-links dist/ ${(targetConfig.user &&
           targetConfig.user + '@') ||
           ''}${targetConfig.host}:${targetConfig.root}current/`,
         sshCmd + ' "sudo toggl_thumbler_restart"'
@@ -202,7 +203,7 @@ gulp.task('deploy', ['build'], function () {
         )
       })
     )
-})
+}))
 
 var bumpVersion = (type = 'patch') => {
   let version = ''
@@ -244,4 +245,4 @@ gulp.task('bump:patch', () => bumpVersion('patch'))
 gulp.task('bump:minor', () => bumpVersion('minor'))
 gulp.task('bump:major', () => bumpVersion('major'))
 
-gulp.task('default', ['serve', 'livereload'])
+gulp.task('default', gulp.series('serve', 'livereload'))
