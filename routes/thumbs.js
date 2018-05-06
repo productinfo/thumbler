@@ -230,7 +230,7 @@ module.exports = function (debug = false) {
     })
 
     const defCountNeg = new Promise(resolve => {
-      f = _.extend({ rating: { $lt: 0 } }, filter)
+      let f = _.extend({ rating: { $lt: 0 } }, filter)
       Thumb.count(f).exec(function (err, count) {
         if (err) {
           return next(err)
@@ -251,7 +251,7 @@ module.exports = function (debug = false) {
       .toDate()
 
     const defCountPosWeek = new Promise(resolve => {
-      f = _.extend({}, filter, {
+      let f = _.extend({}, filter, {
         rating: { $gt: 0 },
         createdAt: { $lte: lastWeekEnd, $gte: lastWeekStart }
       })
@@ -264,7 +264,7 @@ module.exports = function (debug = false) {
     })
 
     const defCountNegWeek = new Promise(resolve => {
-      f = _.extend({}, filter, {
+      let f = _.extend({}, filter, {
         rating: { $lt: 0 },
         createdAt: { $lte: lastWeekEnd, $gte: lastWeekStart }
       })
