@@ -15,12 +15,12 @@ const thumbsRouter = require('./routes/thumbs')
 const statusRouter = require('./routes/status')
 const compression = require('compression')
 const cons = require('consolidate')
-const eco = require('eco')
 const mongoose = require('mongoose')
 const dbState = require('./util/db_state')
 
 let hooks
 try {
+  /* eslint-disable node/no-missing-require, node/no-unpublished-require */
   hooks = require('./local_config/hooks')
 } catch (e) {
   hooks = {}
@@ -33,7 +33,7 @@ app.set('views', path.join(__dirname, 'views'))
 app.engine('eco', cons.eco)
 app.set('view engine', 'eco')
 
-app.use(favicon(__dirname + '/public/favicon.ico'))
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 app.enable('trust proxy')
 app.use(logger('dev'))
 app.use(bodyParser.json())
@@ -90,6 +90,7 @@ let dbUrl
 try {
   dbUrl = process.env.DB_URL
   if (!dbUrl) {
+    /* eslint-disable node/no-missing-require, node/no-unpublished-require */
     dbUrl = require('./db_config.json').url
   }
 } catch (error) {

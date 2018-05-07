@@ -1,18 +1,14 @@
+/* eslint-disable node/no-unpublished-require */
 const gulp = require('gulp')
 const process = require('process')
-const fs = require('fs')
 const supervisor = require('gulp-supervisor')
-let print = require('gulp-print')
 const livereload = require('gulp-livereload')
 const gutil = require('gulp-util')
-const _ = require('lodash')
-const path = require('path')
 const mocha = require('gulp-spawn-mocha')
 const shell = require('gulp-shell')
 const bump = require('gulp-bump')
 const tap = require('gulp-tap')
 const { exec } = require('child_process')
-print = require('gulp-print')
 
 const cl = gutil.colors
 
@@ -47,6 +43,7 @@ const paths = {
 
 let deployConfig = null
 try {
+  /* eslint-disable node/no-missing-require, node/no-unpublished-require */
   deployConfig = require('./local_config/deploy_config')
 } catch (err) {
   deployConfig = null
@@ -166,11 +163,6 @@ gulp.task('deploy', () => {
     targetConfig.root += '/'
   }
 
-  const sshConfig = {
-    host: targetConfig.host,
-    port: targetConfig.port || 22
-  }
-
   if (gutil.env.b) {
     bumpVersion(gutil.env.b)
   }
@@ -186,9 +178,9 @@ gulp.task('deploy', () => {
     .pipe(
       shell([
         sshCmd +
-          ` \"cd ${
+          `cd ${
             targetConfig.root
-          }; mkdir -p current; rm -rf previous; cp -r current previous\"`,
+          }; mkdir -p current; rm -rf previous; cp -r current previous`,
         `rsync -e 'ssh -p ${
           targetConfig.port
         }' --checksum --archive --compress --delete --keep-dirlinks --safe-links dist/ ${(targetConfig.user &&

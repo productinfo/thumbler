@@ -33,7 +33,8 @@ const editableFields = [
   'user.email',
   'user.company',
   'user.ip',
-  'agent.name'
+  'agent.name',
+  'type'
 ]
 
 const filterFields = function (data, fields) {

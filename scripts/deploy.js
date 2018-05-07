@@ -1,6 +1,8 @@
 /**
  * Thumbler deploy script
  */
+
+/* eslint-disable node/no-unpublished-require */
 const chalk = require('chalk')
 const argv = require('minimist')(process.argv.slice(2))
 
@@ -12,6 +14,7 @@ const env = process.env.NODE_ENV
 
 let deployConfig = null
 try {
+  /* eslint-disable node/no-missing-require, node/no-unpublished-require */
   deployConfig = require('../local_config/deploy_config')
 } catch (err) {
   deployConfig = null

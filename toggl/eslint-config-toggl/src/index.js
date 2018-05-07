@@ -11,6 +11,7 @@ module.exports = {
   rules: {
     // Built-in ESLint rules
     'no-mixed-operators': 'off',
-    'promise/avoid-new': 'off'
+    'promise/avoid-new': 'off',
+    'promise/no-callback-in-promise': 'off'
   }
 }

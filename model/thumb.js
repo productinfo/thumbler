@@ -1,8 +1,8 @@
-let Thumb
 const mongoose = require('mongoose')
 const paginate = require('mongoose-paginate')
 
 const ThumbSchema = new mongoose.Schema({
+  type: String, // default | toggl-master
   rating: { type: Number, required: true },
   serviceId: { type: String, required: true },
   subjectId: { type: String, required: true },
@@ -57,4 +57,4 @@ ThumbSchema.statics.getServiceSummary = function (serviceId, from, to) {
   )
 }
 
-module.exports = Thumb = mongoose.model('Thumb', ThumbSchema)
+module.exports = mongoose.model('Thumb', ThumbSchema)
