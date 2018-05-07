@@ -18,6 +18,7 @@ moment.updateLocale('en', {
 
 let hooks
 try {
+  /* eslint-disable node/no-missing-require, node/no-unpublished-require */
   hooks = require('../local_config/hooks')
 } catch (e) {
   hooks = {}
@@ -180,7 +181,7 @@ module.exports = function (debug = false) {
       .toDate()
     const { serviceId } = req.query
     return Thumb.getServiceSummary(serviceId, yesterday, today).exec(
-      (err, result) => res.json(result)
+      (err, result) => res.json(err || result)
     )
   })
 
@@ -339,11 +340,11 @@ module.exports = function (debug = false) {
       .then(function (thumb) {
         switch (accepts(req).type(['json', 'html'])) {
           case 'html':
-            res.render('vote', { thumb })
+            return res.render('vote', { thumb })
           case 'json':
-            res.send({ id: thumb.id })
+            return res.send({ id: thumb.id })
           default:
-            res.status(200).end()
+            return res.status(200).end()
         }
       })
       .catch(function (err) {
@@ -369,11 +370,11 @@ module.exports = function (debug = false) {
       .then(function (thumb) {
         switch (accepts(req).type(['json', 'html'])) {
           case 'html':
-            res.render('vote', { thumb })
+            return res.render('vote', { thumb })
           case 'json':
-            res.send({ id: thumb.id })
+            return res.send({ id: thumb.id })
           default:
-            res.status(200).end()
+            return res.status(200).end()
         }
       })
       .catch(function (err) {
@@ -391,11 +392,11 @@ module.exports = function (debug = false) {
     const sendResponse = () => {
       switch (accepts(req).type(['json', 'html'])) {
         case 'html':
-          res.render('thankyou')
+          return res.render('thankyou')
         case 'json':
-          res.send({ id: req.body.id })
+          return res.send({ id: req.body.id })
         default:
-          res.status(200).end()
+          return res.status(200).end()
       }
     }
 
