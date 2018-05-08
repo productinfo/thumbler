@@ -10,6 +10,12 @@
   </head>
   <body>
     <div id="wrap">
+      <div id="tabs">
+        <ul>
+          <li><a data-type="default" href="?type=default">Default</a></li>
+          <li><a data-type="toggl-master" href="?type=toggl-master">Toggl Master</a></li>
+        </ul>
+      </div>
       <div class="general-stats">
         <div class="alltime">
           <div class="label">Total:</div>
@@ -24,6 +30,7 @@
       </div>
       <h1>Latest thumbs</h1>
       <form action="?" class="filter" method="GET">
+        <input type="hidden" name="type" id="type" value="<%= @typeFilter %>" />
         <input type="text" name="agent" id="id_agent" placeholder="Agent filter" value="<%= @agentFilter %>" />
         <input type="text" name="subject" id="id_subject" placeholder="Subject/User filter" value="<%= @subjectFilter %>" title="Add a preceding * to search anywhere in the field" />
         <input type="text" name="date_from" id="id_date_from" placeholder="From" value="<%= @dateFromFilter %>" />
@@ -91,6 +98,7 @@
     <script src="/javascripts/jquery.min.js" type="text/javascript"></script>
     <script src="/javascripts/jquery-ui.min.js" type="text/javascript"></script>
     <script type="text/javascript">
+      $('#tabs [data-type="<%= @typeFilter %>"]').addClass('active')
       $("#id_date_from").datepicker({
         dateFormat: "dd/mm/yy",
         defaultDate: "-1w",

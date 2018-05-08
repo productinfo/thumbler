@@ -95,7 +95,8 @@ const createFilter = function ({
   dateFromFilter,
   dateToFilter,
   hasFeedbackFilter,
-  notHandledFilter
+  notHandledFilter,
+  typeFilter
 }) {
   const filter = {}
 
@@ -162,6 +163,11 @@ const createFilter = function ({
     }
   }
 
+  if (typeFilter) {
+    filter['type'] =
+      typeFilter !== 'default' ? typeFilter : { $in: [null, 'default'] }
+  }
+
   return filter
 }
 
@@ -188,6 +194,7 @@ module.exports = function (debug = false) {
 
   router.get('/list', (req, res, next) => {
     const page = Math.max(1, req.params.page || 1)
+    const typeFilter = req.query.type || 'default'
     const subjectFilter = req.params.subject || ''
     const agentFilter = req.params.agent || ''
     const dateFromFilter = req.params.date_from || ''
@@ -195,6 +202,7 @@ module.exports = function (debug = false) {
     const hasFeedbackFilter = !!req.params.has_feedback || false
     const notHandledFilter = !!req.params.not_handled || false
     const filter = createFilter({
+      typeFilter,
       subjectFilter,
       agentFilter,
       dateFromFilter,
@@ -307,6 +315,7 @@ module.exports = function (debug = false) {
           dateToFilter,
           hasFeedbackFilter,
           notHandledFilter,
+          typeFilter,
           page,
           totalPages: pages,
           perPage: PER_PAGE,
