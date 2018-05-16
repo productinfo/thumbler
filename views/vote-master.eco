@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+    <meta name="viewport" id="viewport-meta" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="/stylesheets/style.css" rel="stylesheet" type="text/css">
+    <title>Thank you for your feedback!</title>
+  </head>
+  <body class="js flexbox rgba backgroundsize borderradius boxshadow svg placeholder">
+    <div id="wrap">
+      <div id="video-container">
+      </div>
+
+      <div id="main">
+        <div class="wrap">
+
+          <a href="https://www.toggl.com/" target="_blank" id="logo"></a>
+
+          <div class="top">
+            <h1 class="ip"><span class="big"><span class="colored">Thank you</span></span> for your feedback!</h1>
+            <p class="narrow">
+              Your feedback helps us to improve the Toggl Master Program and deliver better customer support. We aim for <strong>100% satisfaction</strong> level.
+            </p>
+            <p class="narrow">
+              If you wish to make any specific comments or give us further information on your response, <strong>please enter it below!</strong>
+            </p>
+          </div>
+
+          <form action="feedback/" class="feedback" method="post">
+            <input type="hidden" name="type" value="toggl-master" />
+            <input type="hidden" name="id" value="<%= @thumb.id %>" />
+            <p>
+              <textarea name="feedback" id="id_feedback" placeholder="Your feedback..."></textarea>
+            </p>
+            <p>
+              <button class="submit">Send</button>
+            </p>
+          </form>
+
+          <div class="share"><div class="h-sep"></div>
+            <a href="https://twitter.com/toggl" target="_blank" class="twitter"><span></span></a>
+            <a href="https://www.facebook.com/Toggl" target="_blank" class="facebook"><span></span></a>
+            <a href="https://plus.google.com/b/106979070496351291487/106979070496351291487/posts" target="_blank" class="google"><span></span></a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </body>
+</html>

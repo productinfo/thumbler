@@ -49,6 +49,11 @@ app.use(
   })
 )
 
+app.use((req, res, next) => {
+  res.locals.isMaster = req.query.type === 'toggl-master'
+  next()
+})
+
 app.get('/sanity', (req, res) => res.status(404).send('Sanity not found'))
 app.use('/status', statusRouter(app.get('env') === 'development'))
 

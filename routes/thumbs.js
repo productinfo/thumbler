@@ -350,7 +350,8 @@ module.exports = function (debug = false) {
       .then(function (thumb) {
         switch (accepts(req).type(['json', 'html'])) {
           case 'html':
-            return res.render('vote', { thumb })
+            const view = res.locals.isMaster ? 'vote' : 'vote-master'
+            return res.render(view, { thumb })
           case 'json':
             return res.send({ id: thumb.id })
           default:
@@ -380,7 +381,8 @@ module.exports = function (debug = false) {
       .then(function (thumb) {
         switch (accepts(req).type(['json', 'html'])) {
           case 'html':
-            return res.render('vote', { thumb })
+            const view = res.locals.isMaster ? 'vote' : 'vote-master'
+            return res.render(view, { thumb })
           case 'json':
             return res.send({ id: thumb.id })
           default:
@@ -402,7 +404,8 @@ module.exports = function (debug = false) {
     const sendResponse = () => {
       switch (accepts(req).type(['json', 'html'])) {
         case 'html':
-          return res.render('thankyou')
+          const view = res.locals.isMaster ? 'thankyou' : 'thankyou-master'
+          return res.render(view)
         case 'json':
           return res.send({ id: req.body.id })
         default:
