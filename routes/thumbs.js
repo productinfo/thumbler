@@ -381,7 +381,7 @@ module.exports = function (debug = false) {
       .then(function (thumb) {
         switch (accepts(req).type(['json', 'html'])) {
           case 'html':
-            const view = res.locals.isMaster ? 'vote' : 'vote-master'
+            const view = res.locals.isMaster ? 'vote-master' : 'vote'
             return res.render(view, { thumb })
           case 'json':
             return res.send({ id: thumb.id })
@@ -404,7 +404,7 @@ module.exports = function (debug = false) {
     const sendResponse = () => {
       switch (accepts(req).type(['json', 'html'])) {
         case 'html':
-          const view = res.locals.isMaster ? 'thankyou' : 'thankyou-master'
+          const view = res.locals.isMaster ? 'thankyou-master' : 'thankyou'
           return res.render(view)
         case 'json':
           return res.send({ id: req.body.id })
