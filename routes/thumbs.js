@@ -399,12 +399,13 @@ module.exports = function (debug = false) {
   })
 
   router.post('/feedback', (req, res, next) => {
+    const isMaster = res.body.type === 'toggl-master' || res.locals.isMaster
     const feedback = (req.body.feedback || '').trim()
 
     const sendResponse = () => {
       switch (accepts(req).type(['json', 'html'])) {
         case 'html':
-          const view = res.locals.isMaster ? 'thankyou-master' : 'thankyou'
+          const view = isMaster ? 'thankyou-master' : 'thankyou'
           return res.render(view)
         case 'json':
           return res.send({ id: req.body.id })
