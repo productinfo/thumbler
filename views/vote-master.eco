@@ -9,7 +9,7 @@
   </head>
   <body class="js flexbox rgba backgroundsize borderradius boxshadow svg placeholder">
     <div id="wrap">
-      <div id="video-container">
+      <div class="master-container" id="video-container">
       </div>
 
       <div id="main">

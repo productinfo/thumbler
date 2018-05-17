@@ -159,6 +159,10 @@ p {
 	background-image: url("../images/arrow_white.svg");
 }
 
+.master-container {
+  background: url("../images/master-bg.png") no-repeat left top !important;
+}
+
 #video-container {
 	position: absolute;
 	top: 0;
