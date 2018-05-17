@@ -160,7 +160,7 @@ p {
 }
 
 .master-container {
-  background: url("../images/master-bg.png") no-repeat left top !important;
+  background: url("../images/master-bg.png") no-repeat center top !important;
 }
 
 #video-container {
