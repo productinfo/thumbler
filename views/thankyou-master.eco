@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+    <meta name="viewport" id="viewport-meta" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="/stylesheets/style.css" rel="stylesheet" type="text/css">
+    <title>Thank you for your feedback!</title>
+  </head>
+  <body class="js flexbox rgba backgroundsize borderradius boxshadow svg placeholder">
+    <div id="wrap">
+      <div class="master-container" id="video-container">
+      </div>
+
+      <div id="main">
+        <div class="wrap">
+
+          <a href="https://www.toggl.com/" target="_blank" id="logo"></a>
+
+          <div class="top">
+            <h1 class="ip"><span class="big"><span class="colored">Thank you</span></span> for your feedback!</h1>
+            <p class="narrow">
+              Your comment has been sent to us.
+            </p>
+          </div>
+
+          <h3 id="bh">You may now close this window</h3>
+
+      </div>
+    </div>
+  </body>
+</html>

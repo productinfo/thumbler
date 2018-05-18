@@ -19,6 +19,18 @@ pre {
   padding: 20px;
   background: #efefef;
 }
+#tabs > ul {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+#tabs > ul > li {
+  margin-right: 8px;
+}
+#tabs .active {
+  font-weight: bold;
+}
 .general-stats {
   float: right;
   margin: 0 -10px;

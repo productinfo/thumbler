@@ -1,0 +1,16 @@
+{
+  "private": true,
+  "name": "eslint-config-toggl",
+  "version": "1.0.0-next",
+  "main": "src/index.js",
+  "dependencies": {
+    "eslint-config-standard": "11.0.0-beta.0",
+    "eslint-plugin-import": "^2.9.0",
+    "eslint-plugin-node": "6.0.0",
+    "eslint-plugin-promise": "3.6.0",
+    "eslint-plugin-standard": "3.0.1"
+  },
+  "peerDependencies": {
+    "eslint": "4.18.1"
+  }
+}
