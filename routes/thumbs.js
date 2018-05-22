@@ -193,14 +193,14 @@ module.exports = function (debug = false) {
   })
 
   router.get('/list', (req, res, next) => {
-    const page = Math.max(1, req.params.page || 1)
+    const page = Math.max(1, req.query.page || 1)
     const typeFilter = req.query.type || 'default'
-    const subjectFilter = req.params.subject || ''
-    const agentFilter = req.params.agent || ''
-    const dateFromFilter = req.params.date_from || ''
-    const dateToFilter = req.params.date_to || ''
-    const hasFeedbackFilter = !!req.params.has_feedback || false
-    const notHandledFilter = !!req.params.not_handled || false
+    const subjectFilter = req.query.subject || ''
+    const agentFilter = req.query.agent || ''
+    const dateFromFilter = req.query.date_from || ''
+    const dateToFilter = req.query.date_to || ''
+    const hasFeedbackFilter = !!req.query.has_feedback || false
+    const notHandledFilter = !!req.query.not_handled || false
     const filter = createFilter({
       typeFilter,
       subjectFilter,
