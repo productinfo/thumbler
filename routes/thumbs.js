@@ -214,7 +214,7 @@ module.exports = function (debug = false) {
     const defList = new Promise(resolve => {
       Thumb.paginate(
         filter,
-        { page, limit: PER_PAGE },
+        { page, limit: PER_PAGE, sort: { createdAt: 'desc' } },
         function (err, result) {
           if (err) {
             return next(err)
@@ -224,8 +224,7 @@ module.exports = function (debug = false) {
             thumbs: result.docs,
             count: result.total
           })
-        },
-        { sortBy: { createdAt: -1 } }
+        }
       )
     })
 
