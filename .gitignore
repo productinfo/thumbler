@@ -1,11 +1,12 @@
+.*
 !.gitignore
+!.nvmrc
+!.prettierignore
 
 node_modules/
 local_config/
-
-yarn-error.log
-npm-debug*.log
+dist
 
 db_config.json
-
-dist
+npm-debug*.log
+yarn-error.log
