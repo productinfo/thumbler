@@ -1,4 +1,6 @@
-FROM node:8.10.0-alpine
+ARG node_version
+
+FROM node:${node_version}-alpine
 
 ENV NODE_PATH /workspace/node_modules
 ENV PATH $PATH:/workspace/node_modules/.bin
