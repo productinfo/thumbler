@@ -11,6 +11,7 @@ x-node: &node
     context: ./toggl/docker
     args:
       node_version: 10.13.0
+      yarn_version: 1.12.1
   user: node
   secrets:
     - id_rsa
