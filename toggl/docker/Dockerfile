@@ -8,7 +8,7 @@ ENV PATH $PATH:/workspace/node_modules/.bin
 WORKDIR /home/node/thumbler
 
 RUN \
-	apk --no-cache add \
+	apk add --no-cache \
 		dumb-init \
 		g++ \
 		gcc \
