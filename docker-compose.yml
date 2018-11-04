@@ -10,7 +10,7 @@ x-node: &node
   build:
     context: ./toggl/docker
     args:
-      node_version: 8.11.3
+      node_version: 10.13.0
   user: node
   secrets:
     - id_rsa
